@@ -1,0 +1,9 @@
+<div
+  name="<%= card.value %>"
+  class="card
+         <%= card.back == true ? '_back' : ('_' + card.value.downcase) %>
+         <%= card.chosen ? 'chosen' : '' %>
+         <%= card.selectable ? 'selectable' : '' %>"
+  style="top: <%= y %>px; left: <%= x %>px">
+    &nbsp;
+</div>

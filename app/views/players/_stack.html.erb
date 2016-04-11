@@ -1,0 +1,5 @@
+<div class='stack' style='<%= style_position(position, unit:'px') %>'>
+  <% cards.each.with_index do |card, index| %>
+      <%= render partial:'card', locals: { x: (index * spacing_x), y: (index * spacing_y), card: card } %>
+  <% end %>
+</div>

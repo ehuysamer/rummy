@@ -1,0 +1,158 @@
+// Place all the styles related to the games controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.zone
+{
+  $size-top: 150px;
+  $size-bottom: 150px;
+
+  position: absolute;
+  border: 1px solid green;
+  background-color: #E0FFE0;
+  left: 0px;
+  right: 0px;
+  margin: 0 0;
+  padding: 0 0;
+
+  &.pickup
+  {
+    top: 0;
+    height: $size-top;
+    overflow-x: scroll;
+  }
+
+  &.players
+  {
+    top: $size-top;
+    bottom: $size-bottom;
+    overflow-y: scroll;
+  }
+
+  &.user
+  {
+    height: $size-bottom;
+    bottom: 0;
+    overflow-x: scroll;
+  }
+}
+
+.stack {
+  position: absolute;
+  margin: 0 0;
+  padding: 0 0;
+}
+
+.card {
+  $width: 168;
+  $height: 243;
+
+  width: $width * 1px;
+  height: $height * 1px;
+  transform-origin: top left;
+  transform: scale(0.5, 0.5);
+  position: absolute;
+
+  &.chosen {
+    margin-top: -15px;
+  }
+
+  &.selectable:hover {
+    -webkit-filter: invert(100%); filter: invert(100%);
+  }
+
+  $margin: -0.5;
+
+  $X0: 0;
+  $X1: ($X0 + $width + $margin);
+  $X2: ($X1 + $width + $margin);
+  $X3: ($X2 + $width + $margin);
+  $X4: ($X3 + $width + $margin);
+  $X5: ($X4 + $width + $margin);
+  $X6: ($X5 + $width + $margin);
+  $X7: ($X6 + $width + $margin);
+  $X8: ($X7 + $width + $margin);
+  $X9: ($X8 + $width + $margin);
+  $X10: ($X9 + $width + $margin);
+  $X11: ($X10 + $width + $margin);
+  $X12: ($X11 + $width + $margin);
+  $X13: ($X12 + $width + $margin);
+
+  $Y0: 0;
+  $Y1: 244;
+  $Y2: 487;
+  $Y3: 730;
+  $Y4: 974;
+
+  //TODO: $X: (0, 10, 20)  ;  nth($cards, 3)
+
+  $cards: url('cards.png');
+
+  &._ca { background: $cards (-$X0*1px) (-$Y0*1px); }
+  &._c2 { background: $cards (-$X1*1px) (-$Y0*1px); }
+  &._c3 { background: $cards (-$X2*1px) (-$Y0*1px); }
+  &._c4 { background: $cards (-$X3*1px) (-$Y0*1px); }
+  &._c5 { background: $cards (-$X4*1px) (-$Y0*1px); }
+  &._c6 { background: $cards (-$X5*1px) (-$Y0*1px); }
+  &._c7 { background: $cards (-$X6*1px) (-$Y0*1px); }
+  &._c8 { background: $cards (-$X7*1px) (-$Y0*1px); }
+  &._c9 { background: $cards (-$X8*1px) (-$Y0*1px); }
+  &._c10 { background: $cards (-$X9*1px) (-$Y0*1px); }
+  &._cj { background: $cards (-$X10*1px) (-$Y0*1px); }
+  &._cq { background: $cards (-$X11*1px) (-$Y0*1px); }
+  &._ck { background: $cards (-$X12*1px) (-$Y0*1px); }
+
+  &._da { background: $cards (-$X0*1px) (-$Y1*1px); }
+  &._d2 { background: $cards (-$X1*1px) (-$Y1*1px); }
+  &._d3 { background: $cards (-$X2*1px) (-$Y1*1px); }
+  &._d4 { background: $cards (-$X3*1px) (-$Y1*1px); }
+  &._d5 { background: $cards (-$X4*1px) (-$Y1*1px); }
+  &._d6 { background: $cards (-$X5*1px) (-$Y1*1px); }
+  &._d7 { background: $cards (-$X6*1px) (-$Y1*1px); }
+  &._d8 { background: $cards (-$X7*1px) (-$Y1*1px); }
+  &._d9 { background: $cards (-$X8*1px) (-$Y1*1px); }
+  &._d10 { background: $cards (-$X9*1px) (-$Y1*1px); }
+  &._dj { background: $cards (-$X10*1px) (-$Y1*1px); }
+  &._dq { background: $cards (-$X11*1px) (-$Y1*1px); }
+  &._dk { background: $cards (-$X12*1px) (-$Y1*1px); }
+
+  &._ha { background: $cards (-$X0*1px) (-$Y2*1px); }
+  &._h2 { background: $cards (-$X1*1px) (-$Y2*1px); }
+  &._h3 { background: $cards (-$X2*1px) (-$Y2*1px); }
+  &._h4 { background: $cards (-$X3*1px) (-$Y2*1px); }
+  &._h5 { background: $cards (-$X4*1px) (-$Y2*1px); }
+  &._h6 { background: $cards (-$X5*1px) (-$Y2*1px); }
+  &._h7 { background: $cards (-$X6*1px) (-$Y2*1px); }
+  &._h8 { background: $cards (-$X7*1px) (-$Y2*1px); }
+  &._h9 { background: $cards (-$X8*1px) (-$Y2*1px); }
+  &._h10 { background: $cards (-$X9*1px) (-$Y2*1px); }
+  &._hj { background: $cards (-$X10*1px) (-$Y2*1px); }
+  &._hq { background: $cards (-$X11*1px) (-$Y2*1px); }
+  &._hk { background: $cards (-$X12*1px) (-$Y2*1px); }
+
+  &._sa { background: $cards (-$X0*1px) (-$Y3*1px); }
+  &._s2 { background: $cards (-$X1*1px) (-$Y3*1px); }
+  &._s3 { background: $cards (-$X2*1px) (-$Y3*1px); }
+  &._s4 { background: $cards (-$X3*1px) (-$Y3*1px); }
+  &._s5 { background: $cards (-$X4*1px) (-$Y3*1px); }
+  &._s6 { background: $cards (-$X5*1px) (-$Y3*1px); }
+  &._s7 { background: $cards (-$X6*1px) (-$Y3*1px); }
+  &._s8 { background: $cards (-$X7*1px) (-$Y3*1px); }
+  &._s9 { background: $cards (-$X8*1px) (-$Y3*1px); }
+  &._s10 { background: $cards (-$X9*1px) (-$Y3*1px); }
+  &._sj { background: $cards (-$X10*1px) (-$Y3*1px); }
+  &._sq { background: $cards (-$X11*1px) (-$Y3*1px); }
+  &._sk { background: $cards (-$X12*1px) (-$Y3*1px); }
+
+
+  &._ha { background: $cards (-$X0*1px) (-$Y2*1px); }
+  &._h2 { background: $cards (-$X1*1px) (-$Y2*1px); }
+  &._h3 { background: $cards (-$X2*1px) (-$Y2*1px); }
+
+  &._s4 { background: $cards (-$X3*1px) (-$Y3*1px); }
+
+  &._joker { background: $cards (-$X0*1px) (-$Y4*1px); }
+  &._joker2 { background: $cards (-$X1*1px) (-$Y4*1px); }
+  &._back { background: $cards (-$X2*1px) (-$Y4*1px); }
+}
+
