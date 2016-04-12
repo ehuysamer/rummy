@@ -6,7 +6,8 @@ RSpec.describe CardStack, type: :class do
   include CardStackHelpers
   include_context 'stack_samples'
 
-  let(:stack) { stack_5_with_joker }
+  let(:cards) { [] }
+  let(:stack) { CardStack.new(cards: cards) }
 
   describe 'Initialize' do
     it 'empty' do
@@ -15,7 +16,7 @@ RSpec.describe CardStack, type: :class do
   end
 
   describe 'Add all' do
-    let(:stack) { CardStack.new }
+    let(:cards) { [] }
 
     before { stack.add_all }
 
@@ -25,7 +26,7 @@ RSpec.describe CardStack, type: :class do
   end
 
   describe 'Push' do
-    let(:stack) { stack_2 }
+    let(:cards) { cards_2 }
 
     it 'has two cards' do
       expect(stack.cards.length).to eq 2
@@ -37,7 +38,7 @@ RSpec.describe CardStack, type: :class do
   end
 
   describe 'Pop' do
-    let(:stack) { stack_2 }
+    let(:cards) { cards_2 }
 
     it 'pops the last card first' do
       expect(stack.pop.value).to eq 'C3'
@@ -50,7 +51,7 @@ RSpec.describe CardStack, type: :class do
   end
 
   describe 'Shuffle' do
-    let(:stack) { stack_5_with_joker }
+    let(:cards) { cards_5_with_joker }
 
     before do
       stack.shuffle
@@ -74,13 +75,14 @@ RSpec.describe CardStack, type: :class do
   end
 
   describe 'Find' do
-    let(:stack) { stack_5_with_joker }
+    let(:cards) { cards_5_with_joker }
 
     it 'can find a contained card by value' do
       expect(stack.find(value: 'JOKER').value).to eq 'JOKER'
     end
 
     it 'can find a contained card by rank and suite' do
+      #TODO: Must confirm everywhere that rank is an integer
       expect(stack.find(suite: 'C', rank: 3).value).to eq 'C3'
     end
 
@@ -90,7 +92,7 @@ RSpec.describe CardStack, type: :class do
   end
 
   describe 'Remove by value' do
-    let(:stack) { stack_5_with_joker }
+    let(:cards) { cards_5_with_joker }
 
     it 'returns the card that was removed' do
       expect(stack.remove_by_value('H2').value).to eq 'H2'
@@ -108,7 +110,7 @@ RSpec.describe CardStack, type: :class do
   end
 
   describe 'Sweep the stack' do
-    let(:stack) { stack_5_with_joker }
+    let(:cards) { cards_5_with_joker }
     let!(:returned) { stack.sweep_from('S4') }
 
     it 'returns last 3 cards' do
@@ -121,7 +123,7 @@ RSpec.describe CardStack, type: :class do
   end
 
   describe 'Pick' do
-    let(:stack) { stack_5_with_joker }
+    let(:cards) { cards_5_with_joker }
     let(:picks) { ['C3', 'S4', 'D5'] }
 
     it 'can pick 3 cards' do
@@ -195,13 +197,7 @@ RSpec.describe CardStack, type: :class do
     end
 
     context 'has a low stack' do
-      let(:stack) do
-        new_stack = CardStack.new
-        new_stack << Card.new(suite: 'H', rank: 'A', value: 'HA')
-        new_stack << Card.new(suite: 'H', rank: '2', value: 'H2')
-        new_stack << Card.new(suite: 'H', rank: '3', value: 'H3')
-        new_stack
-      end
+      let(:cards) { cards_low }
     end
 
     context 'has a low stack with jokers' do
