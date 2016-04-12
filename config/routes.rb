@@ -1,11 +1,16 @@
 Rails.application.routes.draw do
+  resources :tests
   #devise_for :users
   #root 'static_pages#home'
   #get 'static_pages/help'
   #get 'home' => 'static_pages#home'
 
-  resources :games, only: [:show]  do #,except: [] do
-    resources :players, only: [:show]
+  resources :games do #, only: [:show]  do #,except: [] do
+    resources :players do #, only: [:show] do
+      resources :draw #, only: [:create]
+      resources :discard #, only: [:create]
+      resources :draw_discarded #, only: [:create]
+    end
   end
 
 

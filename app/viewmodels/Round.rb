@@ -7,6 +7,8 @@ class Round
   attr_reader :rank_melds
   attr_reader :suite_melds
 
+  @@round = nil
+
   CARDS_DEALT = {
       2 => 10,
       3 => 7,
@@ -30,4 +32,7 @@ class Round
     @discard << @pickup.pop
   end
 
+  def self.get(game_id: nil)
+    @@round ||= Round.new(4)
+  end
 end

@@ -1,6 +1,8 @@
 class Stack
   attr_reader :cards
 
+  delegate :each, :length, :<<, :pop, :concat, to: :cards
+
   def initialize
     @cards = []
   end
@@ -16,19 +18,27 @@ class Stack
     @cards << Card.new(value: 'joker')
   end
 
-  def <<(card)
-    @cards << card
-  end
-
-  def pop
-    @cards.pop
-  end
-
   def shuffle
     @cards.shuffle!
   end
 
-  def length
-    @cards.length
+  def find(value: nil, rank: nil, suite: nil)
+    @cards.find{ |card| (value.nil? || card.value == value) && (rank.nil? || card.rank == rank) && (suite.nil? || card.suite == suite)}
   end
+
+  def remove_by_value(value)
+    card_found = find(value: value)
+    @cards.reject!{ |card| card.compare_value_to(card_found) }
+    card_found
+  end
+
+  def sweep_from(value)
+    position = @cards.find_index{ |card| card.value == value }
+    returned = @cards.last(@cards.length - position)
+    @cards = @cards - returned
+    returned
+  end
+
+  #TODO: IsTop(Card)
+  #TODO: Sort + methods of sorting
 end

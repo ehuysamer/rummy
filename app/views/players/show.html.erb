@@ -1,12 +1,39 @@
-<div class="qzone qpickup">
-  <%= render partial: 'stack', locals: { position: Position.new(left: 5, top: 5),  cards: @pickup, spacing_x: 2, spacing_y: 2 } %>
-  <%= render partial: 'stack', locals: { position: Position.new(left: 120, top: 20), cards: @discard, spacing_x: 12, spacing_y: 0 } %>
+<div class="zone pickup">
+  <%= render partial: 'stack', locals: { position: Position.new(left: 5, top: 5),  cards: @pickup, spacing_x: 0.5, spacing_y: 0.5 } %>
+  <%= render partial: 'stack', locals: { position: Position.new(left: 120, top: 15), cards: @discard, spacing_x: 12, spacing_y: 0 } %>
+
+  <div style="position:absolute; left: 10px; top: 0px; height: 20px">
+    <%= form_tag(:controller => :draw, :action => :create, :player_id => '1') do %>
+        <%= button_tag(
+                type: 'submit',
+                name: 'pickup',
+                value: 'pickup') do %>
+            Draw
+        <% end %>
+    <% end # form %>
+
+    <%= form_tag(:controller => :draw_discarded, :action => :create, :player_id => '1') do %>
+        <% @discard.each do |card| %>
+            <%= button_tag(
+                    type: 'submit',
+                    name: 'draw',
+                    value: card.value) do %>
+                <%= card.value %>
+            <% end %>
+        <% end %>
+    <% end # form %>
+
+  </div>
+
 </div>
 
 <div class="zone players">
-  <%= render partial: 'stack', locals: { position: Position.new(left: 10, top: 10), cards: @player2, spacing_x: 5, spacing_y: 0 } %>
+  <% @player_hands.drop(1).each.with_index do |hand, index| %>
+      <%= render partial: 'stack', locals: { position: Position.new(left: 10, top: 10 + index * 130), cards: hand, spacing_x: 12, spacing_y: 0 } %>
+  <% end %>
+
   <%
-    offset = @player2.length * 5 + 10 + 90
+    offset = @pickup.length * 5 + 10 + 90
 
     @player2_melds.each do |meld| %>
       <%= render partial: 'stack', locals: { position: Position.new(left: offset, top: 10),  cards: meld, spacing_x: 12, spacing_y: 0 } %>
@@ -17,6 +44,19 @@
 
 </div>
 
-<div class="qzone quser">
-  <%= render partial: 'stack', locals: { position: Position.new(left: 10, bottom: 130), cards: @player1, spacing_x: 12, spacing_y: 0 } %>
+<div class="zone user">
+  <%= render partial: 'stack', locals: { position: Position.new(left: 10, bottom: 130), cards: @player_hands[0], spacing_x: 12, spacing_y: 0 } %>
+
+  <div style="position: absolute; bottom: 0px; height: 20px">
+    <%= form_tag(:controller => :discard, :action => :create, :player_id => '1') do %>
+        <% @player_hands[0].each do |card| %>
+          <%= button_tag(
+                  type: 'submit',
+                  name: 'discard',
+                  value: card.value) do %>
+              <%= card.value %>
+            <% end %>
+        <% end %>
+    <% end # form %>
+  </div>
 </div>

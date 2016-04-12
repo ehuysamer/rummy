@@ -14,4 +14,12 @@ class Card
     @suite = suite
     @rank = rank
   end
+
+  def compare_value_to(other)
+    value == other.value
+  end
+
+  def compare_rank_suite_to(other)
+    rank == other.rank && suite == other.suite
+  end
 end

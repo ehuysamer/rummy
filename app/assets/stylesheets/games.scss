@@ -2,6 +2,32 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+@import 'colours';
+
+.zone::-webkit-scrollbar {
+  -webkit-appearance: none;
+}
+
+.zone::-webkit-scrollbar:vertical {
+  width: 11px;
+}
+
+.zone::-webkit-scrollbar:horizontal {
+  height: 11px;
+}
+
+.zone::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  border: 2px solid green; /* should match background, can't be transparent */
+  //background-color: rgba(0, 0, 0, .5);
+  background-color: green;
+}
+
+.zone::-webkit-scrollbar-track {
+  border-radius: 8px;
+  background-color: transparent;
+}
+
 .zone
 {
   $size-top: 150px;
@@ -9,7 +35,7 @@
 
   position: absolute;
   border: 1px solid green;
-  background-color: #E0FFE0;
+  background-color: $colour-background;
   left: 0px;
   right: 0px;
   margin: 0 0;
@@ -27,6 +53,7 @@
     top: $size-top;
     bottom: $size-bottom;
     overflow-y: scroll;
+    padding-bottom: 20px;
   }
 
   &.user
@@ -155,4 +182,3 @@
   &._joker2 { background: $cards (-$X1*1px) (-$Y4*1px); }
   &._back { background: $cards (-$X2*1px) (-$Y4*1px); }
 }
-
