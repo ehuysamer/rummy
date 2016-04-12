@@ -138,44 +138,60 @@ RSpec.describe CardStack, type: :class do
 
   #TODO: Card owner
   #TODO: Card sort
-
-
   #TODO: common context: lower, higher, etc. stacks from line 192
 
+  #TODO: Move this to correct spec file
+  describe 'cards_from_values' do
+    it 'Converts numbered ranks correctly' do
+      expect(cards_from_values(%w(H2 H3 H4 H5 H6 H7 H8 H9)).map{ |card| card.rank }).to eq [2, 3, 4, 5, 6, 7, 8, 9]
+    end
+
+    it 'Converts numbered ranks with jokers correctly' do
+      expect(cards_from_values(%w(JH2 JH3 JH4 JH5 JH6 JH7 JH8 JH9)).map{ |card| card.rank }).to eq [2, 3, 4, 5, 6, 7, 8, 9]
+    end
+
+    it 'Converts symbols correctly' do
+      expect(cards_from_values(%w(HJ HQ HK HA)).map{ |card| card.rank }).to eq [11, 12, 13, 1]
+    end
+
+    it 'Converts 10 correctly' do
+      expect(cards_from_values(%w(H10 JH10)).map{ |card| card.rank }).to eq [10, 10]
+    end
+  end
+
   describe 'is_consecutive' do
-    context 'has a mid stack' do
-      it '' do
-        expect(CardStack.is_consecutive([])).to be
-      end
+    it 'is consecutive for low' do
+      expect(CardStack.is_consecutive([cards_low])).to be_truthy
+    end
+    it 'is consecutive for mid' do
+      expect(CardStack.is_consecutive([cards_mid])).to be_truthy
+    end
+    it 'is consecutive for high' do
+      expect(CardStack.is_consecutive([cards_high])).to be_truthy
+    end
+    it 'is consecutive for wrap' do
+      expect(CardStack.is_consecutive([cards_wrap])).to be_truthy
+    end
+    it 'is inconsecutive for inconsecutive' do
+      expect(CardStack.is_consecutive([cards_wrap])).to be_falsey
     end
   end
 
   describe 'can_meld' do
     context 'has no cards in rank meld yet' do
-      let(:stack) { CardStack.new(rank: '4') }
+      let(:stack) { CardStack.new(rank: 4) }
 
       it 'can start a rank meld with 3' do
-        cards_to_meld = [
-            Card.new(suite: 'H', rank: '4', value: 'H4'),
-            Card.new(suite: 'D', rank: '4', value: 'joker'),
-            Card.new(suite: 'C', rank: '4', value: 'joker2')
-        ]
-
-        expect(stack.can_meld(cards_to_meld)).to be_truthy
+        expect(stack.can_meld(cards_rank_meld_3)).to be_truthy
       end
 
       it 'cannot start a rank-meld less than 3' do
-        cards_to_meld = [
-            Card.new(suite: 'H', rank: '4', value: 'H4'),
-            Card.new(suite: 'D', rank: '4', value: 'D4')
-        ]
-
-        expect(stack.can_meld(cards_to_meld)).to be_falsey
+        expect(stack.can_meld(cards_rank_meld_incomplete)).to be_falsey
       end
     end
 
     context 'has no cards in suite meld yet' do
-      let(:stack) { CardStack.new }
+      let(:stack) { CardStack.new(suite: 'H') }
 
       it 'can start a suite meld with 3' do
 

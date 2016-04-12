@@ -15,12 +15,48 @@ class Card
     @rank = rank
   end
 
+  RANKS = %w(A 2 3 4 5 6 7 8 9 10 J Q K)
+
   def self.rank_to_name(rank)
-    %w(A 2 3 4 5 6 7 8 9 10 J Q K)[rank - 1]
+    RANKS[rank - 1]
+  end
+
+  def self.name_to_rank(name)
+    RANKS.find_index(name) + 1
   end
 
   def self.suite_rank_to_value(suite, rank)
     suite + Card.rank_to_name(rank)
+  end
+
+  def self.rank_of_value(value)
+    # [<JOKER>]<SUITE><RANK NAME>
+    index = 0
+    rank_name = nil
+
+    # Joker (which is optional)
+    if index < value.length && value[index].downcase == 'j'
+      index += 1
+    end
+
+    # Suite
+    if index < value.length
+      index += 1
+    end
+
+    # Rank digit 1
+    if index < value.length
+      rank_name = value[index]
+      index += 1
+    end
+
+    # Rank digit 2
+    if index < value.length
+      rank_name += value[index]
+      index += 1
+    end
+
+    name_to_rank(rank_name) if rank_name && rank_name.length > 0
   end
 
   def self.create(suite: nil?, rank: nil?)
