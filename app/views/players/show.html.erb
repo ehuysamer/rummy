@@ -47,16 +47,31 @@
 <div class="zone user">
   <%= render partial: 'stack', locals: { position: Position.new(left: 10, bottom: 130), cards: @player_hands[0], spacing_x: 12, spacing_y: 0 } %>
 
-  <div style="position: absolute; bottom: 0px; height: 20px">
+  <div style="position: absolute; bottom: 0px; height: 40px; background-color: rgba(0, 100, 0, 0.5)">
     <%= form_tag(:controller => :discard, :action => :create, :player_id => '1') do %>
-        <% @player_hands[0].each do |card| %>
-          <%= button_tag(
-                  type: 'submit',
-                  name: 'discard',
-                  value: card.value) do %>
-              <%= card.value %>
-            <% end %>
-        <% end %>
+      <% @player_hands[0].each do |card| %>
+        <%= button_tag(
+                type: 'submit',
+                name: 'discard',
+                value: card.value) do %>
+            <%= card.value %>
+          <% end %>
+      <% end %>
+    <% end # form %>
+
+    <%= form_tag(:controller => :meld, :action => :create, :player_id => '1') do %>
+
+      <% @player_hands[0].each do |card| %>
+          <%= check_box('cards', card.value, {:multiple => true}, card.value, nil) %><%= card.value %>
+      <% end %>
+
+      <%= button_tag(
+              type: 'submit',
+              name: 'meld',
+              value: 'meld') do %>
+          Meld
+      <% end %>
+
     <% end # form %>
   </div>
 </div>

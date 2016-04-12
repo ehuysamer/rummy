@@ -18,17 +18,17 @@ class Round
   }
 
   def initialize(num_players)
-    @pickup = Stack.new
+    @pickup = CardStack.new
     @pickup.add_all
     @pickup.shuffle
 
-    @player_hands = (1..num_players).map { Stack.new }
+    @player_hands = (1..num_players).map { CardStack.new }
 
     CARDS_DEALT[num_players].times do
       @player_hands.each { |hand| hand << @pickup.pop }
     end
 
-    @discard = Stack.new
+    @discard = CardStack.new
     @discard << @pickup.pop
   end
 

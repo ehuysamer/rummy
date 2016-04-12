@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Stack, type: :class do
+RSpec.describe CardStack, type: :class do
   let(:num_players) { 4 }
   let(:round) { Round.new(num_players) }
 

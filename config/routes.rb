@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       resources :draw #, only: [:create]
       resources :discard #, only: [:create]
       resources :draw_discarded #, only: [:create]
+      resources :meld #, only: [:create]
     end
   end
 
