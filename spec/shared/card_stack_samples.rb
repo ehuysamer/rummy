@@ -5,11 +5,9 @@ shared_context 'stack_samples' do
   let(:cards_wrap) { cards_from_values %w(HQ HK HA H2) }
   let(:cards_inconsecutive_ace) { cards_from_values %w(HQ HK H2) }
 
-  let(:cards_rank_meld_3) { cards_from_values %w(H4 JD4 JC4) }
+  let(:cards_rank_meld_3) { cards_from_values %w(H4 D4 C4) }
   let(:cards_rank_meld_incomplete) { cards_from_values %w(H4 D4) }
-
-  let(:cards_rank_meld_3) { cards_from_values %w(H4 JD4 JC4) }
-  let(:cards_rank_meld_incomplete) { cards_from_values %w(H4 D4) }
+  let(:cards_rank_meld_3_jokers) { cards_from_values %w(H4 JD4 JC4) }
 
   let(:cards_suite_meld_3) { cards_from_values %w(H4 JH5 JH6) }
   let(:cards_suite_meld_incomplete) { cards_from_values %w(H4 H5) }

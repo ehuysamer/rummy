@@ -4,8 +4,7 @@ class Round
 
   attr_reader :player_hands
 
-  attr_reader :rank_melds
-  attr_reader :suite_melds
+  attr_reader :melds
 
   @@round = nil
 
@@ -30,9 +29,17 @@ class Round
 
     @discard = CardStack.new
     @discard << @pickup.pop
+
+    @melds = []
+    (1..13).each { |rank| @melds << CardStack.new(rank: rank) }
+    %w(H C S D).each { |suite| @melds << CardStack.new(suite: suite) }
   end
 
   def self.get(game_id: nil)
     @@round ||= Round.new(4)
+  end
+
+  def find_meld(cards)
+    melds.find { |meld| meld.can_meld(cards) }
   end
 end

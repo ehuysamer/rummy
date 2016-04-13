@@ -322,103 +322,125 @@ RSpec.describe CardStack, type: :class do
   end
 
   describe 'can_meld' do
-    context 'has no cards in rank meld yet' do
-      let(:stack) { CardStack.new(rank: 4) }
+    context 'meld stack is for a rank' do
+      let(:stack) { CardStack.new(rank: 4, cards: cards) }
 
-      it 'can start a rank meld with 3' do
-        expect(stack.can_meld(cards_rank_meld_3)).to be_truthy
+      context 'has no cards in rank meld yet' do
+        let(:cards) { cards_empty }
+
+        it 'can start a rank meld with 3' do
+          expect(stack.can_meld(cards_rank_meld_3)).to be_truthy
+        end
+
+        it 'cannot start a rank-meld less than 3' do
+          expect(stack.can_meld(cards_rank_meld_incomplete)).to be_falsey
+        end
       end
 
-      it 'cannot start a rank-meld less than 3' do
-        expect(stack.can_meld(cards_rank_meld_incomplete)).to be_falsey
+      context 'and has cards' do
+        let(:cards) { cards_rank_meld_3 }
+
+        it 'can meld another card' do
+          expect(stack.can_meld(cards_from_values %w(S4))).to be_truthy
+        end
+
+        it 'can meld a joker' do
+          expect(stack.can_meld(cards_from_values %w(JS4))).to be_truthy
+        end
+
+        it 'cannot meld another rank' do
+          expect(stack.can_meld(cards_from_values %w(C5))).to be_falsey
+        end
       end
+
+      # context 'has a rank stack with jokers' do
+      #   let(:stack) do
+      #     new_stack = CardStack.new(rank: 4)
+      #     new_stack << Card.new(suite: 'H', rank: '4', value: 'H4')
+      #     new_stack << Card.new(suite: 'C', rank: '4', value: 'joker')
+      #     new_stack << Card.new(suite: 'D', rank: '4', value: 'joker2')
+      #     new_stack
+      #   end
+      # end
     end
 
-    context 'has no cards in suite meld yet' do
-      let(:stack) { CardStack.new(suite: 'H') }
+    context 'meld stack is for a suite' do
+      let(:stack) { CardStack.new(suite: 'H', cards: cards) }
 
-      it 'can start a suite meld with 3' do
+      context 'has no cards in suite meld yet' do
+        let(:cards) { [] }
 
+        it 'can start a suite meld with 3' do
+          expect(stack.can_meld(cards_suite_meld_3)).to be_truthy
+        end
+
+        it 'cannot start a suite-meld less than 3' do
+          expect(stack.can_meld(cards_suite_meld_incomplete)).to be_falsey
+        end
       end
 
-      it 'cannot start a suite-meld less than 3' do
+      context 'that has a mid stack' do
+        let(:cards) { cards_mid }
 
+        it 'and can meld above and below' do
+          expect(stack.can_meld(cards_from_values %w(H6 H10))).to be_truthy
+        end
+
+        it 'and cannot meld a different suite above' do
+          expect(stack.can_meld(cards_from_values %w(D10))).to be_falsey
+        end
+
+        it 'and cannot meld a different suite below' do
+          expect(stack.can_meld(cards_from_values %w(D6))).to be_falsey
+        end
+
+        it 'and cannot meld a card that is not consecutive' do
+          expect(stack.can_meld(cards_from_values %w(D5))).to be_falsey
+        end
       end
-    end
 
-    context 'has a mid stack' do
-      let(:stack) do
-        new_stack = CardStack.new
-        new_stack << Card.new(suite: 'H', rank: '5', value: 'H5')
-        new_stack << Card.new(suite: 'H', rank: '6', value: 'H6')
-        new_stack << Card.new(suite: 'H', rank: '7', value: 'H7')
-        new_stack
+      context 'has a low stack' do
+        let(:cards) { cards_low }
+
+        it 'and can meld above and below' do
+          expect(stack.can_meld(cards_from_values %w(HK H4))).to be_truthy
+        end
       end
-    end
 
-    context 'has a low stack' do
-      let(:cards) { cards_low }
-    end
-
-    context 'has a low stack with jokers' do
-      let(:stack) do
-        new_stack = CardStack.new
-        new_stack << Card.new(suite: 'H', rank: 'A', value: 'joker')
-        new_stack << Card.new(suite: 'H', rank: '2', value: 'H2')
-        new_stack << Card.new(suite: 'H', rank: '3', value: 'joker2')
-        new_stack
+      context 'has a low stack with jokers' do
+        let(:stack) do
+          new_stack = CardStack.new
+          new_stack << Card.new(suite: 'H', rank: 'A', value: 'joker')
+          new_stack << Card.new(suite: 'H', rank: '2', value: 'H2')
+          new_stack << Card.new(suite: 'H', rank: '3', value: 'joker2')
+          new_stack
+        end
       end
-    end
 
-    context 'has a high stack' do
-      let(:stack) do
-        new_stack = CardStack.new
-        new_stack << Card.new(suite: 'H', rank: 'Q', value: 'HQ')
-        new_stack << Card.new(suite: 'H', rank: 'K', value: 'HK')
-        new_stack << Card.new(suite: 'H', rank: 'A', value: 'HA')
-        new_stack
+      context 'has a high stack' do
+        let(:cards) { cards_high }
+
+        it 'can meld above and below' do
+          expect(stack.can_meld(cards_from_values %w(H10 HA))).to be_truthy
+        end
       end
-    end
 
-    context 'has a high stack with jokers' do
-      let(:stack) do
-        new_stack = CardStack.new
-        new_stack << Card.new(suite: 'H', rank: 'Q', value: 'joker')
-        new_stack << Card.new(suite: 'H', rank: 'K', value: 'HK')
-        new_stack << Card.new(suite: 'H', rank: 'A', value: 'joker2')
-        new_stack
+      context 'has a high stack with jokers' do
+        let(:stack) do
+          new_stack = CardStack.new
+          new_stack << Card.new(suite: 'H', rank: 'Q', value: 'joker')
+          new_stack << Card.new(suite: 'H', rank: 'K', value: 'HK')
+          new_stack << Card.new(suite: 'H', rank: 'A', value: 'joker2')
+          new_stack
+        end
       end
-    end
 
-    context 'has a rollover stack' do
-      let(:stack) do
-        new_stack = CardStack.new
-        new_stack << Card.new(suite: 'H', rank: 'Q', value: 'HQ')
-        new_stack << Card.new(suite: 'H', rank: 'K', value: 'HK')
-        new_stack << Card.new(suite: 'H', rank: 'A', value: 'HA')
-        new_stack << Card.new(suite: 'H', rank: '2', value: 'H2')
-        new_stack << Card.new(suite: 'H', rank: '3', value: 'H3')
-        new_stack
-      end
-    end
+      context 'has a rollover stack' do
+        let(:cards) { cards_wrap }
 
-    context 'has a rank stack' do
-      let(:stack) do
-        new_stack = CardStack.new
-        new_stack << Card.new(suite: 'H', rank: '4', value: 'H4')
-        new_stack << Card.new(suite: 'C', rank: '4', value: 'C4')
-        new_stack << Card.new(suite: 'D', rank: '4', value: 'D4')
-        new_stack
-      end
-    end
-
-    context 'has a rank stack with jokers' do
-      let(:stack) do
-        new_stack = CardStack.new
-        new_stack << Card.new(suite: 'H', rank: '4', value: 'H4')
-        new_stack << Card.new(suite: 'C', rank: '4', value: 'joker')
-        new_stack << Card.new(suite: 'D', rank: '4', value: 'joker2')
-        new_stack
+        it 'can meld above and below' do
+          expect(stack.can_meld(cards_from_values %w(HJ H3))).to be_truthy
+        end
       end
     end
   end

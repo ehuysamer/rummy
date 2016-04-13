@@ -21,7 +21,10 @@ class CardStack
     end
 
     if suite
-      cards_to_check.all? { |card| card.suite == suite || card.value == 'joker' || card.value == 'joker2' }
+      if cards_to_check.all? { |card| card.suite == suite || card.value == 'joker' || card.value == 'joker2' }
+        test_list = cards.clone.concat(cards_to_check)
+        CardStack.is_consecutive test_list
+      end
     elsif rank
       cards_to_check.all? { |card| card.rank == rank || card.value == 'joker' || card.value == 'joker2' }
     end
@@ -35,6 +38,7 @@ class CardStack
     (rank - 2) % 13 + 1
   end
 
+  #TODO: Impact of jokers
   def self.is_adjacent(card1, card2)
     (card1.rank - card2.rank).abs == 1  || rank_inc(card1.rank) == card2.rank || rank_dec(card1.rank) == card2.rank
   end
