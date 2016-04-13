@@ -8,13 +8,14 @@ class Card
   attr_accessor :rank
   attr_accessor :owner
 
-  def initialize(value: '', suite: nil, rank: nil, back: false, selectable: true, chosen: false)
+  def initialize(value: '', suite: nil, rank: nil, back: false, selectable: true, chosen: false, owner: owner)
     @value = value
     @back = back
     @selectable = selectable
     @chosen = chosen
     @suite = suite
     @rank = rank
+    @owner = owner
   end
 
   RANKS = %w(A 2 3 4 5 6 7 8 9 10 J Q K)

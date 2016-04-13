@@ -5,8 +5,6 @@ class PlayersController < ApplicationController
     @pickup = @round.pickup
     @discard = @round.discard
 
-    @player2_melds = []
-
     @players = @round.players
 
     #     [

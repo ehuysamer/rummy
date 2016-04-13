@@ -47,35 +47,39 @@ class Round
     (1..13).each { |rank| @melds << CardStack.new(rank: rank) }
     %w(H C S D).each { |suite| @melds << CardStack.new(suite: suite) }
 
-    test_cards = [
+    Meld.new(round: self, player: @players[1], cards: [
+        Card.new(suite: 'H', rank: 3, value: 'D3'),
+        Card.new(suite: 'S', rank: 3, value: 'S3'),
+        Card.new(suite: 'D', rank: 3, value: 'D3')
+    ]).call()
+
+    Meld.new(round: self, player: @players[2], cards: [
+        Card.new(suite: 'H', rank: 4, value: 'H3'),
+        Card.new(suite: 'H', rank: 5, value: 'H5'),
+        Card.new(suite: 'H', rank: 6, value: 'H6'),
+        Card.new(suite: 'H', rank: 7, value: 'H7')
+    ]).call()
+
+    Meld.new(round: self, player: @players[2], cards: [
         Card.new(suite: 'H', rank: 5, value: 'H5'),
         Card.new(suite: 'S', rank: 5, value: 'S5'),
         Card.new(suite: 'D', rank: 5, value: 'D5')
-    ]
-    test_meld = find_meld(test_cards)
-    test_meld.concat(test_cards)
-    test_meld.owner = @players[2]
-    @players[0].melds << test_meld
+    ]).call()
 
-    test_cards = [
+    Meld.new(round: self, player: @players[3], cards: [
+        Card.new(suite: 'H', rank: 8, value: 'H8'),
+        Card.new(suite: 'S', rank: 8, value: 'S8'),
+        Card.new(suite: 'D', rank: 8, value: 'D8')
+    ]).call()
+
+    Meld.new(round: self, player: @current_player, cards: [
         Card.new(suite: 'H', rank: 2, value: 'H2'),
         Card.new(suite: 'S', rank: 2, value: 'S2'),
         Card.new(suite: 'D', rank: 2, value: 'D2')
-    ]
-    test_meld = find_meld(test_cards)
-    test_meld.concat(test_cards)
-    test_meld.owner = @players[2]
-    @players[0].melds << test_meld
+    ]).call()
 
-    test_cards = [
-        Card.new(suite: 'H', rank: 3, value: 'H3'),
-        Card.new(suite: 'S', rank: 3, value: 'S3'),
-        Card.new(suite: 'D', rank: 3, value: 'D3')
-    ]
-    test_meld = find_meld(test_cards)
-    test_meld.concat(test_cards)
-    test_meld.owner = @players[2]
-    @players[1].melds << test_meld
+    @current_player.hand << Card.new(suite: 'C', rank: 3, value: 'C3')
+    @current_player.hand << Card.new(suite: 'C', rank: 5, value: 'C5')
   end
 
   def self.get(game_id: nil)
