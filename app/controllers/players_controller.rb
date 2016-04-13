@@ -1,13 +1,13 @@
 class PlayersController < ApplicationController
   def show
-    round = Round.get(game_id: 1)
+    @round = Round.get(game_id: 1)
 
-    @pickup = round.pickup
-    @discard = round.discard
+    @pickup = @round.pickup
+    @discard = @round.discard
 
     @player2_melds = []
 
-    @player_hands = round.player_hands
+    @players = @round.players
 
     #     [
     #         Card.new(value: suite+'A', back: false, selectable: true, chosen: false),

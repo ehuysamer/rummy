@@ -13,10 +13,10 @@ RSpec.describe Round, type: :class do
     end
 
     it 'has correct number of cards for each hand' do
-      expect(round.player_hands[0].length).to eq 7
-      expect(round.player_hands[1].length).to eq 7
-      expect(round.player_hands[2].length).to eq 7
-      expect(round.player_hands[3].length).to eq 7
+      expect(round.players[0].hand.length).to eq 7
+      expect(round.players[1].hand.length).to eq 7
+      expect(round.players[2].hand.length).to eq 7
+      expect(round.players[3].hand.length).to eq 7
     end
 
     it 'has correct cards left in pickup pile' do

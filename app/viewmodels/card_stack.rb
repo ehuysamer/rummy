@@ -1,6 +1,7 @@
 class CardStack
   attr_reader :cards
   attr_reader :rank, :suite
+  attr_accessor :owner
 
   delegate :each, :length, :<<, :pop, :concat, to: :cards
 
@@ -10,6 +11,8 @@ class CardStack
 
     @rank = rank
     @suite = suite
+
+    @owner = nil
   end
 
   def can_meld(cards_to_check)
