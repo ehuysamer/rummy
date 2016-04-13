@@ -18,6 +18,8 @@ shared_context 'stack_samples' do
   let(:cards_2) { cards_from_values(%w(H2 C3)) }
   let(:cards_empty) { [] }
 
+  let(:cards_full_suite) { cards_from_values(%w(HA H2 H3 H4 H5 H6 H7 H8 H9 H10 HJ HQ HK)) }
+
   let(:stack_meld_rank_4) { CardStack.new(rank: 4) }
   let(:stack_meld_suite_hearts) { CardStack.new(suite: 'H') }
 end

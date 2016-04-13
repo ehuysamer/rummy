@@ -159,21 +159,165 @@ RSpec.describe CardStack, type: :class do
     end
   end
 
+  describe 'is adjacent' do
+    let(:result) { CardStack.is_adjacent(source, target) }
+
+    context 'adjacent cards' do
+      let(:source) { Card.new(suite: 'H', rank: 4, value: 'H4') }
+      let(:target) { Card.new(suite: 'H', rank: 5, value: 'H5') }
+
+      it 'are adjacent' do
+        expect(result).to be_truthy
+      end
+    end
+
+    context 'non-adjacent cards' do
+      let(:source) { Card.new(suite: 'H', rank: 4, value: 'H4') }
+      let(:target) { Card.new(suite: 'H', rank: 2, value: 'H2') }
+
+      it 'are non adjacent' do
+        expect(result).to be_falsey
+      end
+    end
+
+    context 'higher wrap cards' do
+      let(:source) { Card.new(suite: 'H', rank: 1, value: 'HA') }
+      let(:target) { Card.new(suite: 'H', rank: 13, value: 'HK') }
+
+      it 'are adjacent' do
+        expect(result).to be_truthy
+      end
+    end
+
+    context 'lower wrap cards' do
+      let(:source) { Card.new(suite: 'H', rank: 13, value: 'HK') }
+      let(:target) { Card.new(suite: 'H', rank: 1, value: 'HA') }
+
+      it 'are adjacent' do
+        expect(result).to be_truthy
+      end
+    end
+  end
+
+  describe 'move_any_adjacent_card' do
+    let!(:result) { CardStack.move_any_adjacent_card(source, target) }
+
+    context 'empty list' do
+      let(:source) { cards_from_values(%w(H3)) }
+      let(:target) {[]}
+
+      it 'moved card to target' do
+        expect(target.map{|card| card.value}).to include 'H3'
+      end
+
+      it 'removed card from source' do
+        expect(source.map{|card| card.value}).not_to include 'H3'
+      end
+
+      it 'returns card that got moved' do
+        expect(result.value).to eq 'H3'
+      end
+    end
+
+    context 'one card on each side' do
+      let(:source) { cards_from_values(%w(H3)) }
+      let(:target) { cards_from_values(%w(H4)) }
+
+      it 'moved card to target' do
+        expect(target.map{|card| card.value}).to include 'H3'
+      end
+
+      it 'others on target is still there' do
+        expect(target.map{|card| card.value}).to include 'H4'
+      end
+
+      it 'removed card from source' do
+        expect(source.map{|card| card.value}).not_to include 'H3'
+      end
+
+      it 'returns card that got moved' do
+        expect(result.value).to eq 'H3'
+      end
+    end
+
+    context 'wrap onto higher stack' do
+      let(:source) { cards_from_values(%w(HA)) }
+      let(:target) { cards_from_values(%w(HK)) }
+
+      it 'moved card to target' do
+        expect(target.map{|card| card.value}).to include 'HA'
+      end
+
+      it 'others on target is still there' do
+        expect(target.map{|card| card.value}).to include 'HK'
+      end
+
+      it 'removed card from source' do
+        expect(source.map{|card| card.value}).not_to include 'HA'
+      end
+
+      it 'returns card that got moved' do
+        expect(result.value).to eq 'HA'
+      end
+    end
+
+    context 'wrap onto lower stack' do
+      let(:source) { cards_from_values(%w(HK)) }
+      let(:target) { cards_from_values(%w(HA)) }
+
+      it 'moved card to target' do
+        expect(target.map{|card| card.value}).to include 'HK'
+      end
+
+      it 'others on target is still there' do
+        expect(target.map{|card| card.value}).to include 'HA'
+      end
+
+      it 'removed card from source' do
+        expect(source.map{|card| card.value}).not_to include 'HK'
+      end
+
+      it 'returns card that got moved' do
+        expect(result.value).to eq 'HK'
+      end
+    end
+
+    context 'nothing consecutive left' do
+      let(:source) { cards_from_values(%w(HA H2 H3)) }
+      let(:target) { cards_from_values(%w(H5 H6 H7)) }
+
+      it 'does not move anything' do
+        expect(target.map{|card| card.value}).to eq %w(H5 H6 H7)
+      end
+
+      it 'does not remove anything' do
+        expect(source.map{|card| card.value}).to eq %w(HA H2 H3)
+      end
+
+      it 'returns falsey' do
+        expect(result).to be_falsey
+      end
+    end
+  end
+
   describe 'is_consecutive' do
     it 'is consecutive for low' do
-      expect(CardStack.is_consecutive([cards_low])).to be_truthy
+      expect(CardStack.is_consecutive(cards_low)).to be_truthy
     end
     it 'is consecutive for mid' do
-      expect(CardStack.is_consecutive([cards_mid])).to be_truthy
+      expect(CardStack.is_consecutive(cards_mid)).to be_truthy
     end
     it 'is consecutive for high' do
-      expect(CardStack.is_consecutive([cards_high])).to be_truthy
+      expect(CardStack.is_consecutive(cards_high)).to be_truthy
     end
     it 'is consecutive for wrap' do
-      expect(CardStack.is_consecutive([cards_wrap])).to be_truthy
+      expect(CardStack.is_consecutive(cards_wrap)).to be_truthy
+    end
+    it 'is consecutive for full suite' do
+      expect(CardStack.is_consecutive(cards_full_suite)).to be_truthy
     end
     it 'is inconsecutive for inconsecutive' do
-      expect(CardStack.is_consecutive([cards_wrap])).to be_falsey
+      expect(CardStack.is_consecutive(cards_inconsecutive_ace)).to be_falsey
     end
   end
 

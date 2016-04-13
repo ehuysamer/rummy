@@ -9,7 +9,7 @@ module CardStackHelpers
         Card.new(suite: suite, rank: rank, value: 'JOKER')
       else
         suite = value[0]
-        Card.new(suite: suite, rank: rank, value: (suite + rank.to_s))
+        Card.new(suite: suite, rank: rank, value: value) #(suite + rank.to_s))
       end
     end
   end

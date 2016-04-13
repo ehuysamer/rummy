@@ -27,8 +27,50 @@ class CardStack
     end
   end
 
-  def self.is_consecutive(cards)
+  def self.rank_inc(rank)
+    (rank % 13) + 1
+  end
 
+  def self.rank_dec(rank)
+    (rank - 2) % 13 + 1
+  end
+
+  def self.is_adjacent(card1, card2)
+    (card1.rank - card2.rank).abs == 1  || rank_inc(card1.rank) == card2.rank || rank_dec(card1.rank) == card2.rank
+  end
+
+  def self.move_any_adjacent_card(cards, target)
+    return nil if cards.length == 0
+
+    if target.length == 0
+      card = cards.shift
+      target << card
+      card
+    else
+      cards.each do |card|
+        target.each do |already_there_card|
+          #byebug
+
+          if is_adjacent(card, already_there_card)
+            cards.delete_if {|card_to_check| card.value == card_to_check.value }
+            target << card
+            return card
+          end
+        end
+      end
+
+      nil
+    end
+  end
+
+  def self.is_consecutive(cards)
+    ranks = cards.clone
+    found = []
+
+    while move_any_adjacent_card(ranks, found) do
+    end
+
+    ranks.length == 0
   end
 
   def add_all
