@@ -91,6 +91,25 @@ class CardStack
     @cards << Card.new(value: 'joker2')
   end
 
+  def sorted
+    c1 = nil
+    c2 = nil
+
+    @cards.dup.sort do |card1, card2|
+      c1 = card1
+      c2 = card2
+
+      if card1.suite != card2.suite
+        card1.suite <=> card2.suite || 0
+      else
+        card1.rank <=> card2.rank || 0
+      end
+    end
+
+  rescue
+    byebug
+  end
+
   def shuffle
     @cards.shuffle!
   end
