@@ -2,5 +2,7 @@
   class="player"
   style="<%= style_position(position, unit:'px') %>">
 
-  <%= player.name %>
+  <div><%= player.name %></div>
+  <div><%= player.has_drawn_card ? 'DRAWN' : '' %></div>
+  <div><%= player == round.current_player ? 'WAITING...' : '' %></div>
 </div>

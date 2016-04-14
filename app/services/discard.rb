@@ -16,6 +16,7 @@ class Discard
     #   return false
     # end
 
+    @round.selected_player.has_drawn_card = false
     @round.discard << @round.selected_player.hand.remove_by_value(@card_value)
 
     @round.next_player
