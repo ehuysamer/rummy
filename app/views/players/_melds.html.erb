@@ -1,14 +1,14 @@
 <% offset = position.left %>
 
 <% player.melds.each do |meld| %>
-    <%= render partial: 'stack', locals: { position: Position.new(left: offset, top: position.top), card_stack: meld, spacing_x: 12, spacing_y: 0 } %>
+    <%= render partial: 'stack', locals: { position: Position.new(left: offset, top: position.top), card_stack: meld, spacing_x: 12, spacing_y: 0, back: false } %>
 
     <% offset += meld.length * 12 + 90 %>
 <% end %>
 
 <% round.melds.select { |meld| meld.owner != player }.each do |meld| %>
     <% temp_meld = CardStack.new(cards: meld.cards.compact.select{ |card| card.owner == player }) %>
-    <%= render partial: 'stack', locals: { position: Position.new(left: offset, top: position.top), card_stack: temp_meld, spacing_x: 12, spacing_y: 0 } %>
+    <%= render partial: 'stack', locals: { position: Position.new(left: offset, top: position.top), card_stack: temp_meld, spacing_x: 12, spacing_y: 0, back: false } %>
     <% offset += temp_meld.cards.length * 12 + 90 if temp_meld.cards.length > 0 %>
 <% end %>
 

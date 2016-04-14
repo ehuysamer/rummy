@@ -141,5 +141,4 @@ class CardStack
   end
 
   #TODO: IsTop(Card)
-  #TODO: Sort + methods of sorting
 end

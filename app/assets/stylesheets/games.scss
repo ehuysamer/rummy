@@ -34,11 +34,10 @@
   $size-bottom: 150px;
 
   position: absolute;
-  border: 1px solid green;
+  border: 1px solid transparent;
   background-color: $colour-background;
   left: 0px;
   right: 0px;
-  margin: 0 0;
   padding: 0 0;
 
   &.pickup

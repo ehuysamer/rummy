@@ -1,5 +1,5 @@
 <div class='stack' style='<%= style_position(position, unit:'px') %>'>
   <% card_stack.sorted.select{ |card| card_stack.owner.nil? || card.owner.nil? || card.owner == card_stack.owner }.each.with_index do |card, index| %>
-      <%= render partial:'card', locals: { x: (index * spacing_x), y: (index * spacing_y), card: card } %>
+      <%= render partial:'card', locals: { x: (index * spacing_x), y: (index * spacing_y), card: card, back: back } %>
   <% end %>
 </div>
