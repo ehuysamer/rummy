@@ -30,6 +30,9 @@ RSpec.describe Round, type: :class do
       expect(round.melds.find(rank: 'K')).to be_truthy
     end
 
+  end
+
+  describe 'find' do
     it 'can find a rank meld' do
       expect(round.find_meld(cards_from_values(%w(H3 C3 H3))).rank).to eq 3
     end
@@ -40,6 +43,22 @@ RSpec.describe Round, type: :class do
 
     it 'cannot find an inconsecutive meld' do
       expect(round.find_meld(cards_from_values(%w(H3 H4 C7)))).to be_nil
+    end
+  end
+
+  describe 'next_player' do
+    it 'advances to the next player' do
+      expect(round.next_player).to be round.players[1]
+    end
+
+    it 'changes the current player' do
+      result = round.next_player
+      expect(round.current_player).to be result
+    end
+
+    it 'wraps after the last player' do
+      num_players.times { round.next_player }
+      expect(round.current_player).to be round.players[0]
     end
   end
 end

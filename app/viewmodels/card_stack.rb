@@ -3,7 +3,7 @@ class CardStack
   attr_reader :rank, :suite
   attr_accessor :owner
 
-  delegate :each, :length, :<<, :pop, :concat, to: :cards
+  delegate :each, :length, :<<, :pop, :concat, :compact, to: :cards
 
   def initialize(rank: nil, suite: nil, cards: nil)
     @cards = []
@@ -92,22 +92,13 @@ class CardStack
   end
 
   def sorted
-    c1 = nil
-    c2 = nil
-
-    @cards.dup.sort do |card1, card2|
-      c1 = card1
-      c2 = card2
-
+    @cards.dup.compact.sort do |card1, card2|
       if card1.suite != card2.suite
         card1.suite <=> card2.suite || 0
       else
         card1.rank <=> card2.rank || 0
       end
     end
-
-  rescue
-    byebug
   end
 
   def shuffle
@@ -120,7 +111,7 @@ class CardStack
 
   def remove_by_value(value)
     card_found = find(value: value)
-    @cards.reject!{ |card| card.compare_value_to(card_found) }
+    @cards.reject!{ |card| card.compare_value_to(card_found) } if card_found
     card_found
   end
 

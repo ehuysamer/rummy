@@ -2,6 +2,9 @@ class PlayersController < ApplicationController
   def show
     @round = Round.get(game_id: 1)
 
+    @player_id = params[:id].to_i
+    @round.select_player(@round.players[@player_id])
+
     @pickup = @round.pickup
     @discard = @round.discard
 

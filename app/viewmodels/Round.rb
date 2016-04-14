@@ -5,6 +5,7 @@ class Round
   #attr_reader :player_hands
   attr_reader :players
   attr_reader :current_player
+  attr_reader :selected_player
 
   attr_reader :melds
 
@@ -86,7 +87,18 @@ class Round
     @@round ||= Round.new(4)
   end
 
+  def select_player(player)
+    @selected_player = player
+  end
+
   def find_meld(cards)
     melds.find { |meld| meld.can_meld(cards) }
+  end
+
+  def next_player
+    index = players.index(current_player)
+    index = (index + 1) % players.length
+    @current_player = players[index]
+    current_player
   end
 end
