@@ -1,4 +1,5 @@
 class Player
+  attr_reader :id
   attr_reader :name
   attr_reader :melds
   attr_reader :hand
@@ -10,7 +11,8 @@ class Player
   #TODO: end_moves
 
   #TODO: syncing inconsistency: player.melds and meld.owner
-  def initialize(name, hand)
+  def initialize(id, name, hand)
+    @id = id
     @name = name
     @hand = hand
     @melds = []
