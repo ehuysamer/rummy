@@ -7,6 +7,7 @@ class Meld
 
   def call
     meld = round.find_meld(cards)
+
     unless meld.nil?
       if meld.cards.length == 0
         meld.owner = player
@@ -16,6 +17,7 @@ class Meld
       end
 
       meld.concat(cards)
+      player.hand.remove_cards(cards)
       cards.each {|card| card.owner = player}
     end
   end

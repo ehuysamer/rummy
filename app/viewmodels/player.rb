@@ -6,6 +6,7 @@ class Player
   #TODO: start_moves
   #TODO: has_discarded
   #TODO: card_must_use
+  #TODO: has_drawn
   #TODO: end_moves
 
   #TODO: syncing inconsistency: player.melds and meld.owner

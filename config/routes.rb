@@ -5,12 +5,14 @@ Rails.application.routes.draw do
   #get 'static_pages/help'
   #get 'home' => 'static_pages#home'
 
+  #TODO: Sort this out; wrt 'only'
   resources :games do #, only: [:show]  do #,except: [] do
     resources :players do #, only: [:show] do
       resources :draw #, only: [:create]
       resources :discard #, only: [:create]
       resources :draw_discarded #, only: [:create]
       resources :meld #, only: [:create]
+      resources :summon #, only: [:create]
     end
   end
 

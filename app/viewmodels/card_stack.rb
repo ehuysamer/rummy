@@ -128,6 +128,14 @@ class CardStack
     picked
   end
 
+  def remove_cards(cards)
+    @cards -= cards
+  end
+
+  def select(values)
+    @cards.select{ |card| values.include?(card.value) }
+  end
+
   def to_s
     @cards.map { |card| card.value }.to_s
   end

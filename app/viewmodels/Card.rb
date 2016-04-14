@@ -66,6 +66,19 @@ class Card
     Card.new(value: suite_rank_to_value(suite, rank), suite: suite, rank: rank)
   end
 
+  def self.create_from_value(value)
+    suite = nil
+    rank = Card.rank_of_value(value)
+
+    if value[0] == 'J'
+      suite = value[1] if value.length >= 2
+      Card.new(suite: suite, rank: rank, value: 'JOKER')
+    else
+      suite = value[0]
+      Card.new(suite: suite, rank: rank, value: value) #(suite + rank.to_s))
+    end
+  end
+
   def compare_value_to(other)
     value == other.value
   end
