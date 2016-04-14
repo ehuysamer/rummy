@@ -83,12 +83,12 @@ class CardStack
   def add_all
     %w(H C D S).each do |suite|
       (1..13).to_a.each do |rank|
-        @cards << Card.new(suite: suite, rank: rank, value: Card.suite_rank_to_value(suite, rank))
+        @cards << Card.new(suite: suite, rank: rank, value: Card.suite_rank_to_value(suite, rank), joker: false)
       end
     end
 
-    @cards << Card.new(value: 'joker')
-    @cards << Card.new(value: 'joker2')
+    @cards << Card.new(value: 'joker', joker: true)
+    @cards << Card.new(value: 'joker2', joker: true)
   end
 
   def sorted
@@ -109,9 +109,20 @@ class CardStack
     @cards.find{ |card| (value.nil? || card.value == value) && (rank.nil? || card.rank == rank) && (suite.nil? || card.suite == suite)}
   end
 
-  def remove_by_value(value)
-    card_found = find(value: value)
+  def remove_by_value(value: nil, rank: nil, suite: nil)
+    card_found = find(value: value, rank: rank, suite: suite)
     @cards.reject!{ |card| card.compare_value_to(card_found) } if card_found
+    card_found
+  end
+
+  def replace_by_value(value: nil, rank: nil, suite: nil, card: nil)
+    card_found = find(value: value, rank: rank, suite: suite)
+
+    if card_found
+      @cards.reject!{ |c| c.compare_value_to(card_found) }
+      @cards << card
+    end
+
     card_found
   end
 

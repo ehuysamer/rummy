@@ -7,8 +7,11 @@ class Card
   attr_accessor :suite
   attr_accessor :rank
   attr_accessor :owner
+  attr_accessor :joker
 
-  def initialize(value: '', suite: nil, rank: nil, back: false, selectable: true, chosen: false, owner: owner)
+  #TODO: #REFACTOR: Change 'value' to 'id'
+
+  def initialize(value: '', suite: nil, rank: nil, back: false, selectable: true, chosen: false, owner: nil, joker: false)
     @value = value
     @back = back
     @selectable = selectable
@@ -16,6 +19,7 @@ class Card
     @suite = suite
     @rank = rank
     @owner = owner
+    @joker = joker
   end
 
   RANKS = %w(A 2 3 4 5 6 7 8 9 10 J Q K)
@@ -62,8 +66,25 @@ class Card
     name_to_rank(rank_name) if rank_name && rank_name.length > 0
   end
 
-  def self.create(suite: nil?, rank: nil?)
-    Card.new(value: suite_rank_to_value(suite, rank), suite: suite, rank: rank)
+  def self.suite_of_value(value)
+    index = 0
+    rank_name = nil
+
+    # Joker (which is optional)
+    if index < value.length && value[index].downcase == 'j'
+      index += 1
+    end
+
+    # Suite
+    if index < value.length
+      value[index]
+    else
+      nil
+    end
+  end
+
+  def self.create(suite: nil?, rank: nil?, joker: nil?)
+    Card.new(value: suite_rank_to_value(suite, rank), suite: suite, rank: rank, joker: joker)
   end
 
   def self.create_from_value(value)
@@ -72,7 +93,7 @@ class Card
 
     if value[0] == 'J'
       suite = value[1] if value.length >= 2
-      Card.new(suite: suite, rank: rank, value: 'JOKER')
+      Card.new(suite: suite, rank: rank, value: 'JOKER', joker: true)
     else
       suite = value[0]
       Card.new(suite: suite, rank: rank, value: value) #(suite + rank.to_s))

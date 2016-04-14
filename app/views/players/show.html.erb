@@ -20,9 +20,11 @@
 
 <div style="position: absolute; top: 0px; right: 20px; width: 200px; height: 400px; background-color: rgba(0, 100, 0, 0.5); overflow: auto; padding: 10px; margin-top: 20px">
 
-  <% if (@round.selected_player == @round.current_player && @round.selected_player.has_drawn_card) %>
+  <% if @round.selected_player == @round.current_player && @round.selected_player.has_drawn_card %>
+
     <div style="font-size:16px; font-weight: bold">Discard</div>
-    <%= form_tag(:controller => :discard, :action => :create, :player_id => @player_id) do %>
+
+      <%= form_tag(:controller => :discard, :action => :create, :player_id => @player_id) do %>
         <% @round.selected_player.hand.each do |card| %>
             <%= button_tag(
                     type: 'submit',
@@ -34,8 +36,10 @@
     <% end # form %>
   <% end %>
 
-  <% if (@round.selected_player == @round.current_player && @round.selected_player.has_drawn_card) %>
+  <% if @round.selected_player == @round.current_player && @round.selected_player.has_drawn_card %>
+
     <div style="font-size:16px; font-weight: bold">Meld</div>
+
     <%= form_tag(:controller => :meld, :action => :create, :player_id => @player_id) do %>
 
         <% @round.selected_player.hand.each do |card| %>
@@ -49,10 +53,13 @@
             Meld
         <% end %>
 
-    <% end # form %>
+        <%= text_field_tag 'joker1' %>
+        <%= text_field_tag 'joker2' %>
+
+<% end # form %>
   <% end %>
 
-  <% if (@round.selected_player == @round.current_player && !@round.selected_player.has_drawn_card) %>
+  <% if @round.selected_player == @round.current_player && !@round.selected_player.has_drawn_card %>
     <div style="font-size:16px; font-weight: bold">Draw</div>
     <%= form_tag(:controller => :draw, :action => :create, :player_id => @player_id) do %>
         <%= button_tag(
@@ -64,7 +71,7 @@
     <% end # form %>
   <% end %>
 
-  <% if (@round.selected_player == @round.current_player && !@round.selected_player.has_drawn_card) %>
+  <% if @round.selected_player == @round.current_player && !@round.selected_player.has_drawn_card %>
     <div style="font-size:16px; font-weight: bold">Sweep</div>
     <%= form_tag(:controller => :draw_discarded, :action => :create, :player_id => @player_id) do %>
       <% @discard.compact.each do |card| %>
@@ -75,7 +82,7 @@
               <%= card.value %>
           <% end %>
         <% end %>
-  <% end # form %>
+    <% end # form %>
   <% end %>
 
   <div style="font-size:16px; font-weight: bold">Summon</div>
@@ -88,4 +95,32 @@
           Draw
       <% end %>
   <% end # form %>
+
+  <div style="font-size:16px; font-weight: bold">Joker replacement</div>
+  <div>JOKER1: <%= joker1 = @round.find_card(value: 'joker'); (joker1&.suite || '') + (joker1&.rank&.to_s || '') %></div>
+  <div>JOKER2: <%= joker2 = @round.find_card(value: 'joker2'); (joker2&.suite || '') + (joker2&.rank&.to_s || '') %></div>
+
+  <% if @round.selected_player == @round.current_player && @round.selected_player.has_drawn_card %>
+    <%= form_tag(:controller => :joker_grab, :action => :create, :player_id => @player_id) do %>
+        <% @round.selected_player.hand.compact.each do |card|
+          if joker1.suite == card.suite && joker1.rank == card.rank %>
+              <%= button_tag(
+                      type: 'submit',
+                      name: 'card',
+                      value: card.value) do %>
+                  <%= card.value %>
+              <% end %>
+          <% end
+          if joker2.suite == card.suite && joker2.rank == card.rank %>
+            <%= button_tag(
+                  type: 'submit',
+                  name: 'card',
+                  value: card.value) do %>
+              <%= card.value %>
+            <% end %>
+          <% end %>
+      <% end %>
+    <% end # form %>
+  <% end %>
+
 </div>

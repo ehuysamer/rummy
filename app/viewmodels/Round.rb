@@ -48,6 +48,23 @@ class Round
     (1..13).each { |rank| @melds << CardStack.new(rank: rank) }
     %w(H C S D).each { |suite| @melds << CardStack.new(suite: suite) }
 
+
+    joker1 = self.steal_card(value: 'joker')
+    joker1.rank = 3
+    joker1.suite = 'H'
+    joker2 = self.steal_card(value: 'joker2')
+    joker2.rank = 3
+    joker2.suite = 'C'
+    Meld.new(round: self, player: @players[0], cards: [
+        joker1,
+        joker2,
+        Card.new(suite: 'D', rank: 3, value: 'D3')
+    ]).call()
+    @current_player.hand << self.steal_card(value: 'H3')
+    @current_player.hand << self.steal_card(value: 'C3')
+
+
+
     # Meld.new(round: self, player: @players[1], cards: [
     #     Card.new(suite: 'H', rank: 3, value: 'D3'),
     #     Card.new(suite: 'S', rank: 3, value: 'S3'),
@@ -83,6 +100,10 @@ class Round
     # @current_player.hand << Card.new(suite: 'C', rank: 5, value: 'C5')
   end
 
+  def self.reset(game_id: nil)
+    @@round = nil
+  end
+
   def self.get(game_id: nil)
     @@round ||= Round.new(4)
   end
@@ -95,10 +116,30 @@ class Round
     melds.find { |meld| meld.can_meld(cards) }
   end
 
+  def find_card(suite: nil, rank: nil, value: nil)
+    pickup.find(value: value, rank: rank, suite: suite) ||
+        discard.find(value: value, rank: rank, suite: suite) ||
+        (melds.select{|meld| meld.find(value: value, rank: rank, suite: suite) }.first&.find(value: value, rank: rank, suite: suite)) ||
+        (players.select{|player| player.hand.find(value: value, rank: rank, suite: suite) }.first&.hand&.find(value: value, rank: rank, suite: suite))
+  end
+
+  def replace_card(value: nil, rank: nil, suite: nil, card: nil)
+    pickup.replace_by_value(value: value, rank: rank, suite: suite, card: card) ||
+        discard.replace_by_value(value: value, rank: rank, suite: suite, card: card) ||
+        (melds.select{|meld| meld.find(value: value, rank: rank, suite: suite) }.first&.replace_by_value(value: value, rank: rank, suite: suite, card: card)) ||
+        (players.select{|player| player.hand.find(value: value, rank: rank, suite: suite) }.first&.hand&.replace_by_value(value: value, rank: rank, suite: suite, card: card))
+  end
+
+  def steal_card(suite: nil, rank: nil, value: nil)
+    pickup.remove_by_value(value: value, rank: rank, suite: suite) ||
+        discard.remove_by_value(value: value, rank: rank, suite: suite) ||
+        (melds.select{|meld| meld.find(value: value, rank: rank, suite: suite) }.first&.remove_by_value(value: value, rank: rank, suite: suite)) ||
+        (players.select{|player| player.hand.find(value: value, rank: rank, suite: suite) }.first&.hand&.remove_by_value(value: value, rank: rank, suite: suite))
+  end
+
   def next_player
-    index = players.index(current_player)
+    index = players.index(@current_player)
     index = (index + 1) % players.length
     @current_player = players[index]
-    current_player
   end
 end

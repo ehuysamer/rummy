@@ -6,10 +6,10 @@ module CardStackHelpers
 
       if value[0] == 'J'
         suite = value[1] if value.length >= 2
-        Card.new(suite: suite, rank: rank, value: 'JOKER')
+        Card.new(suite: suite, rank: rank, value: 'JOKER', joker: true)
       else
         suite = value[0]
-        Card.new(suite: suite, rank: rank, value: value) #(suite + rank.to_s))
+        Card.new(suite: suite, rank: rank, value: value, joker: false) #(suite + rank.to_s))
       end
     end
   end

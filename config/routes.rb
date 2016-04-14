@@ -12,9 +12,12 @@ Rails.application.routes.draw do
       resources :discard #, only: [:create]
       resources :draw_discarded #, only: [:create]
       resources :meld #, only: [:create]
+      resources :joker_grab #, only: [:create]
       resources :summon #, only: [:create]
     end
   end
+
+  resources :reset
 
 
 

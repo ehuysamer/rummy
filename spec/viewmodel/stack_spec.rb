@@ -410,9 +410,9 @@ RSpec.describe CardStack, type: :class do
       context 'has a low stack with jokers' do
         let(:stack) do
           new_stack = CardStack.new
-          new_stack << Card.new(suite: 'H', rank: 'A', value: 'joker')
+          new_stack << Card.new(suite: 'H', rank: 'A', value: 'joker', joker: true)
           new_stack << Card.new(suite: 'H', rank: '2', value: 'H2')
-          new_stack << Card.new(suite: 'H', rank: '3', value: 'joker2')
+          new_stack << Card.new(suite: 'H', rank: '3', value: 'joker2', joker: true)
           new_stack
         end
       end
@@ -428,9 +428,9 @@ RSpec.describe CardStack, type: :class do
       context 'has a high stack with jokers' do
         let(:stack) do
           new_stack = CardStack.new
-          new_stack << Card.new(suite: 'H', rank: 'Q', value: 'joker')
+          new_stack << Card.new(suite: 'H', rank: 'Q', value: 'joker', joker: true)
           new_stack << Card.new(suite: 'H', rank: 'K', value: 'HK')
-          new_stack << Card.new(suite: 'H', rank: 'A', value: 'joker2')
+          new_stack << Card.new(suite: 'H', rank: 'A', value: 'joker2', joker: true)
           new_stack
         end
       end
