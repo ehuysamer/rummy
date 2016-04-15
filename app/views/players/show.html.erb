@@ -43,7 +43,7 @@
     <%= form_tag(:controller => :meld, :action => :create, :player_id => @player_id) do %>
 
       <% @round.selected_player.hand.sorted.each do |card| %>
-          <%= check_box('cards', card.value, {:multiple => true}, card.value, nil) %><%= raw card_button_text(card) %>
+          <%= check_box('cards', card.value, {:multiple => true, checked: !!card.chosen}, card.value) %><%= raw card_button_text(card) %>
       <% end %>
 
       <div>
