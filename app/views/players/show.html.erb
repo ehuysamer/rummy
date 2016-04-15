@@ -46,17 +46,21 @@
           <%= check_box('cards', card.value, {:multiple => true}, card.value, nil) %><%= raw card_button_text(card) %>
       <% end %>
 
-      <%= button_tag(
-        type: 'submit',
-        name: 'meld',
-        value: 'meld') do %>
-          Meld
-      <% end %>
-
       <div>
-        <%= text_field_tag 'joker1' %>
-        <%= text_field_tag 'joker2' %>
+        <%= button_tag(
+          type: 'submit',
+          name: 'meld',
+          value: 'meld') do %>
+            Meld
+        <% end %>
       </div>
+
+      <% if @round.selected_player.hand.find(value: 'joker') %>
+        <div>Joker 1: <%= text_field_tag 'joker1' %></div>
+      <% end %>
+      <% if @round.selected_player.hand.find(value: 'joker2') %>
+        <div>Joker 2: <%= text_field_tag 'joker2' %></div>
+      <% end %>
 
     <% end # form %>
   <% end %>

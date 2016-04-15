@@ -5,7 +5,6 @@ class DrawController < ApplicationController
     player_id = params[:player_id].to_i
     player = round.players[player_id]
 
-    #TODO: Handle case where no cards left to draw
     player.has_drawn_card = true
 
     #TODO: When no cards left to draw, turn around discard stack
