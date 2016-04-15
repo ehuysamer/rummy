@@ -50,6 +50,75 @@ RSpec.describe CardStack, type: :class do
     end
   end
 
+  describe 'sweep_from' do
+    let(:cards) { cards_variety }
+    let(:card) { 'H8' }
+    let!(:taken) { stack.sweep_from(card).map{|c|c.value} }
+    let(:remaining) { stack.cards.map{|c|c.value} }
+
+    context 'sweep from beginning' do
+      let(:card) { 'H8' }
+
+      it 'gets all the cards' do
+        expect(taken).to eq cards_variety.map{|c|c.value}
+      end
+
+      it 'does not leave cards behind' do
+        expect(remaining).to be_empty
+      end
+    end
+
+    context 'sweep last card' do
+      let(:card) { 'H9' }
+
+      it 'gets the card' do
+        expect(taken).to eq %w(H9)
+      end
+
+      it 'does not leave card behind' do
+        expect(remaining).not_to include 'H9'
+      end
+
+      it 'leaves all others behind' do
+        expect(remaining).to eq %w(H8 HA H10 HJ HQ HK J JD2)
+      end
+    end
+
+    #%w(H8 HA H10 HJ HQ HK J JD2 H9)
+
+    context 'sweep an unranked joker' do
+      let(:card) { 'J' }
+
+      it 'gets the cards' do
+        expect(taken).to eq %w(J JD2 H9)
+      end
+
+      it 'does not leave them behind' do
+        expect(remaining).to have_none %w(J JD2 H9)
+      end
+
+      it 'leaves others behind' do
+        expect(remaining).to eq %w(H8 HA H10 HJ HQ HK)
+      end
+    end
+
+    context 'sweep a ranked joker' do
+      let(:card) { 'JD2' }
+
+      it 'gets the cards' do
+        expect(taken).to eq %w(JD2 H9)
+      end
+
+      it 'does not leave them behind' do
+        expect(remaining).to have_none %w(JD2 H9)
+      end
+
+      it 'leaves others behind' do
+        expect(remaining).to eq %w(H8 HA H10 HJ HQ HK J)
+      end
+    end
+  end
+
   describe 'Shuffle' do
     let(:cards) { cards_5_with_joker }
 
@@ -66,7 +135,7 @@ RSpec.describe CardStack, type: :class do
       expect(stack.cards.map{ |card| card.value }).to include 'C3'
       expect(stack.cards.map{ |card| card.value }).to include 'S4'
       expect(stack.cards.map{ |card| card.value }).to include 'D5'
-      expect(stack.cards.map{ |card| card.value }).to include 'JOKER'
+      expect(stack.cards.map{ |card| card.value }).to include 'J'
     end
 
     it 'has a different order' do
@@ -78,7 +147,7 @@ RSpec.describe CardStack, type: :class do
     let(:cards) { cards_5_with_joker }
 
     it 'can find a contained card by value' do
-      expect(stack.find(value: 'JOKER').value).to eq 'JOKER'
+      expect(stack.find(value: 'J').value).to eq 'J'
     end
 
     it 'can find a contained card by rank and suite' do
@@ -95,16 +164,16 @@ RSpec.describe CardStack, type: :class do
     let(:cards) { cards_5_with_joker }
 
     it 'returns the card that was removed' do
-      expect(stack.remove_by_value('H2').value).to eq 'H2'
+      expect(stack.remove_by_value(value: 'H2').value).to eq 'H2'
     end
 
     it 'removes the card' do
-      stack.remove_by_value('H2')
+      stack.remove_by_value(value: 'H2')
       expect(stack.cards.map{ |card| card.value }).not_to include 'H2'
     end
 
     it 'only removes one card' do
-      stack.remove_by_value('H2')
+      stack.remove_by_value(value: 'H2')
       expect(stack.length).to eq 4
     end
   end
@@ -114,7 +183,7 @@ RSpec.describe CardStack, type: :class do
     let!(:returned) { stack.sweep_from('S4') }
 
     it 'returns last 3 cards' do
-      expect(returned.map {|card| card.value }).to eq ['S4', 'D5', 'JOKER']
+      expect(returned.map {|card| card.value }).to eq ['S4', 'D5', 'J']
     end
 
     it 'keep first 2 cards' do
@@ -132,7 +201,7 @@ RSpec.describe CardStack, type: :class do
 
     it 'leaves cards behind' do
       stack.pick(picks)
-      expect(stack.cards.map{|card| card.value}).to eq ['H2', 'JOKER']
+      expect(stack.cards.map{|card| card.value}).to eq ['H2', 'J']
     end
   end
 

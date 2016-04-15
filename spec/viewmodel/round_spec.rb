@@ -5,7 +5,7 @@ RSpec.describe Round, type: :class do
   include_context 'stack_samples'
 
   let(:num_players) { 4 }
-  let(:round) { Round.new(num_players) }
+  let(:round) { Round.new(num_players).deal }
 
   describe 'Initialize' do
     it 'has one card on the discard pile' do
@@ -29,7 +29,6 @@ RSpec.describe Round, type: :class do
       expect(round.melds.find(rank: '5')).to be_truthy
       expect(round.melds.find(rank: 'K')).to be_truthy
     end
-
   end
 
   describe 'find' do

@@ -20,4 +20,7 @@ shared_context 'stack_samples' do
 
   let(:stack_meld_rank_4) { CardStack.new(rank: 4) }
   let(:stack_meld_suite_hearts) { CardStack.new(suite: 'H') }
+
+  let(:cards_variety) { cards_from_values(%w(H8 HA H10 HJ HQ HK J JD2 H9)) }
 end
+

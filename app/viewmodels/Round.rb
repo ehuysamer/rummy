@@ -28,40 +28,36 @@ class Round
     @pickup.add_all
     @pickup.shuffle
 
+    @discard = CardStack.new
+
     @players = (1..num_players).map do |index|
       hand = CardStack.new
       Player.new(index - 1, 'Player ' + index.to_s, hand)
     end
 
     @current_player = @players[0]
+    @selected_player = @players[0]
 
     #@player_hands = (1..num_players).map { CardStack.new }
-
-    CARDS_DEALT[num_players].times do
-      @players.each { |player| player.hand << @pickup.pop }
-    end
-
-    @discard = CardStack.new
-    @discard << @pickup.pop
 
     @melds = []
     (1..13).each { |rank| @melds << CardStack.new(rank: rank) }
     %w(H C S D).each { |suite| @melds << CardStack.new(suite: suite) }
 
 
-    joker1 = self.steal_card(value: 'joker')
-    joker1.rank = 3
-    joker1.suite = 'H'
-    joker2 = self.steal_card(value: 'joker2')
-    joker2.rank = 3
-    joker2.suite = 'C'
-    Meld.new(round: self, player: @players[0], cards: [
-        joker1,
-        joker2,
-        Card.new(suite: 'D', rank: 3, value: 'D3')
-    ]).call()
-    @current_player.hand << self.steal_card(value: 'H3')
-    @current_player.hand << self.steal_card(value: 'C3')
+    # joker1 = self.steal_card(value: 'joker')
+    # joker1.rank = 3
+    # joker1.suite = 'H'
+    # joker2 = self.steal_card(value: 'joker2')
+    # joker2.rank = 3
+    # joker2.suite = 'C'
+    # Meld.new(round: self, player: @players[0], cards: [
+    #     joker1,
+    #     joker2,
+    #     Card.new(suite: 'D', rank: 3, value: 'D3')
+    # ]).call()
+    # @current_player.hand << self.steal_card(value: 'H3')
+    # @current_player.hand << self.steal_card(value: 'C3')
 
 
 
@@ -100,12 +96,22 @@ class Round
     # @current_player.hand << Card.new(suite: 'C', rank: 5, value: 'C5')
   end
 
+  def deal
+    CARDS_DEALT[@players.length].times do
+      @players.each { |player| player.hand << @pickup.pop }
+    end
+
+    @discard << @pickup.pop
+
+    self
+  end
+
   def self.reset(game_id: nil)
     @@round = nil
   end
 
   def self.get(game_id: nil)
-    @@round ||= Round.new(4)
+    @@round ||= Round.new(4).deal
   end
 
   def select_player(player)
