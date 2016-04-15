@@ -1,6 +1,6 @@
 <div class="zone pickup">
-  <%= render partial: 'stack', locals: { position: Position.new(left: 5, top: 5), card_stack: @pickup, spacing_x: 0.5, spacing_y: 0.5, back: true, selectable: @round.can_draw_card, sorted: false } %>
-  <%= render partial: 'stack', locals: { position: Position.new(left: 120, top: 15), card_stack: @discard, spacing_x: 12, spacing_y: 0, back: false, selectable: @round.can_draw_card, sorted: false } %>
+  <%= render partial: 'stack', locals: {position: Position.new(left: 5, top: 5), card_stack: @pickup, spacing_x: 0.5, spacing_y: 0.5, back: true, selectable: @round.can_draw_card?, sorted: false } %>
+  <%= render partial: 'stack', locals: {position: Position.new(left: 120, top: 15), card_stack: @discard, spacing_x: 12, spacing_y: 0, back: false, selectable: @round.can_draw_card?, sorted: false } %>
 </div>
 
 <div class="zone players">
@@ -13,14 +13,14 @@
 </div>
 
 <div class="zone user">
-  <%= render partial: 'player', locals: { position: Position.new(left: 10, top: 10), player: @round.selected_player, round: @round } %>
-  <%= render partial: 'stack', locals: { position: Position.new(left: 100, bottom: 130), card_stack: @round.selected_player.hand, spacing_x: 12, spacing_y: 0, back: false, selectable: (@round.selected_player == @round.current_player && @round.selected_player.has_drawn_card), sorted: true } %>
-  <%= render partial: 'melds', locals: { position: Position.new(left: 100 + @round.selected_player.hand.length * 12 + 10 + 90, top: 10), round: @round, player: @round.selected_player } %>
+  <%= render partial: 'player', locals: { position: Position.new(left: 10, bottom: 10), player: @round.selected_player, round: @round } %>
+  <%= render partial: 'stack', locals: { position: Position.new(left: 100, top: 20), card_stack: @round.selected_player.hand, spacing_x: 12, spacing_y: 0, back: false, selectable: (@round.selected_player == @round.current_player && @round.selected_player.has_drawn_card), sorted: true } %>
+  <%= render partial: 'melds', locals: { position: Position.new(left: 100 + @round.selected_player.hand.length * 12 + 10 + 90, top: 20), round: @round, player: @round.selected_player } %>
 </div>
 
 <div style="position: absolute; top: 0px; right: 20px; width: 200px; height: 400px; background-color: rgba(0, 100, 0, 0.5); overflow: auto; padding: 10px; margin-top: 20px">
 
-  <% if @round.selected_player == @round.current_player && @round.selected_player.has_drawn_card %>
+  <% if @round.can_play_hand? %>
 
     <div style="font-size:16px; font-weight: bold">Discard</div>
 
@@ -36,7 +36,7 @@
     <% end # form %>
   <% end %>
 
-  <% if @round.can_play_hand %>
+  <% if @round.can_play_hand? %>
 
     <div style="font-size:16px; font-weight: bold">Meld</div>
 
@@ -61,7 +61,7 @@
     <% end # form %>
   <% end %>
 
-  <% if @round.can_draw_card %>
+  <% if @round.can_draw_card? %>
     <div style="font-size:16px; font-weight: bold">Draw</div>
     <%= form_tag(:controller => :draw, :action => :create, :player_id => @player_id) do %>
         <%= button_tag(
@@ -73,7 +73,7 @@
     <% end # form %>
   <% end %>
 
-  <% if @round.can_draw_card %>
+  <% if @round.can_draw_card? %>
     <div style="font-size:16px; font-weight: bold">Sweep</div>
     <%= form_tag(:controller => :draw_discarded, :action => :create, :player_id => @player_id) do %>
       <% @discard.sorted.compact.each do |card| %>
@@ -104,7 +104,7 @@
   <div>JOKER1: <%= joker1 = @round.find_card(value: 'joker'); (joker1&.suite || '') + (joker1&.rank&.to_s || '') %></div>
   <div>JOKER2: <%= joker2 = @round.find_card(value: 'joker2'); (joker2&.suite || '') + (joker2&.rank&.to_s || '') %></div>
 
-  <% if @round.can_play_hand %>
+  <% if @round.can_play_hand? %>
     <%= form_tag(:controller => :joker_grab, :action => :create, :player_id => @player_id) do %>
         <% @round.selected_player.hand.sorted.compact.each do |card|
           if joker1.suite == card.suite && joker1.rank == card.rank %>

@@ -10,6 +10,8 @@ class DrawDiscarded
 
     cards = @round.discard.sweep_from(@card)
 
+    cards.each{ |card| card.chosen = true }
+
     @round.selected_player.hand.concat(cards)
 
     @player.has_drawn_card = true

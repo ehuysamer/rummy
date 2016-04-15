@@ -13,7 +13,9 @@ class DrawController < ApplicationController
 
     round.select_player(player)
 
-    round.selected_player.hand << round.pickup.pop
+    card = round.pickup.pop
+    card.chosen = true
+    round.selected_player.hand << card
 
     redirect_to url_for(:controller => :players, :action => :show, :id => player_id, :game_id => '1')
   end

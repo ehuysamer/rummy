@@ -95,13 +95,11 @@ class Round
     # @current_player.hand << Card.new(suite: 'C', rank: 5, value: 'C5')
   end
 
-  #TODO: #REFACTOR: rename -> can_draw_card?
-  def can_draw_card
+  def can_draw_card?
     !player_won && selected_player && !selected_player.has_drawn_card
   end
 
-  #TODO: #REFACTOR: rename -> can_play_hand?
-  def can_play_hand
+  def can_play_hand?
     !player_won && selected_player && selected_player.has_drawn_card
   end
 

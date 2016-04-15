@@ -1,7 +1,6 @@
 class Card
   #TODO: Change to attr_reader; all except 'owner'
   attr_accessor :chosen
-  attr_accessor :selectable
   attr_accessor :back
   attr_accessor :value
   attr_accessor :suite
@@ -11,10 +10,9 @@ class Card
 
   #TODO: #REFACTOR: Change 'value' to 'id'
 
-  def initialize(value: '', suite: nil, rank: nil, back: false, selectable: true, chosen: false, owner: nil, joker: false)
+  def initialize(value: '', suite: nil, rank: nil, back: false, chosen: false, owner: nil, joker: false)
     @value = value
     @back = back
-    @selectable = selectable
     @chosen = chosen
     @suite = suite
     @rank = rank
