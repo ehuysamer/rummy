@@ -1,13 +1,14 @@
 class Round
   attr_reader :pickup
   attr_reader :discard
-
-  #attr_reader :player_hands
-  attr_reader :players
-  attr_reader :current_player
-  attr_reader :selected_player
-
   attr_reader :melds
+
+  attr_reader :players
+
+  #TODO: #REFACTOR: rename -> current_player_turn
+  attr_reader :current_player
+
+  attr_reader :selected_player
 
   @@round = nil
 
@@ -20,8 +21,6 @@ class Round
   }
 
   #TODO: stack.score
-
-  #TODO: #CURRENT: UI: cards owned by player in meld not owned by player
 
   def initialize(num_players)
     @pickup = CardStack.new
@@ -96,10 +95,24 @@ class Round
     # @current_player.hand << Card.new(suite: 'C', rank: 5, value: 'C5')
   end
 
+  #TODO: #REFACTOR: rename -> can_draw_card?
+  def can_draw_card
+    !player_won && selected_player && !selected_player.has_drawn_card
+  end
+
+  #TODO: #REFACTOR: rename -> can_play_hand?
+  def can_play_hand
+    !player_won && selected_player && selected_player.has_drawn_card
+  end
+
   def deal
     CARDS_DEALT[@players.length].times do
       @players.each { |player| player.hand << @pickup.pop }
     end
+
+    # while players[1].hand.cards.length > 0
+    #   players[1].hand.pop
+    # end
 
     @discard << @pickup.pop
 
@@ -147,5 +160,9 @@ class Round
     index = players.index(@current_player)
     index = (index + 1) % players.length
     @current_player = players[index]
+  end
+
+  def player_won
+    players.select{ |player| player.has_won }.first
   end
 end

@@ -3,6 +3,11 @@
   style="<%= style_position(position, unit:'px') %>">
 
   <div><%= player.name %></div>
-  <div><%= player.has_drawn_card ? 'DRAWN' : '' %></div>
-  <div><%= player == round.current_player ? 'WAITING...' : '' %></div>
+
+  <div><%= player.has_won ? 'WON' : '' %></div>
+
+  <% unless round.player_won %>
+    <div><%= player.has_drawn_card ? 'DRAWN' : '' %></div>
+    <div><%= player == round.current_player ? 'WAITING...' : '' %></div>
+  <% end %>
 </div>

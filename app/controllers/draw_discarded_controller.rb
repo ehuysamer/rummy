@@ -8,6 +8,7 @@ class DrawDiscardedController < ApplicationController
     player.has_drawn_card = true
     round.select_player(player)
 
+    #byebug
     DrawDiscarded.new(player: player, round: round, card: params[:draw]).call
 
     #round.selected_player.hand.concat(round.discard.sweep_from(params[:draw]))
