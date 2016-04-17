@@ -16,6 +16,8 @@ class Discard
     #   return false
     # end
 
+    @round.selected_player.hand.cards.each {|card| card.chosen = false}
+
     @round.selected_player.has_drawn_card = false
     @round.discard << @round.selected_player.hand.remove_by_value(value: @card_value)
 

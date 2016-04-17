@@ -16,7 +16,7 @@ class CardStack
   end
 
   def can_meld(cards_to_check)
-    #WRONG: This will pass because rank.nil? is true if this is a stack for suites
+    #WRONG: The following will pass because rank.nil? is true if this is a stack for suites
     #cards.all? { |card| card.rank == rank || card.suite == suite || card.value == 'joker' || card.value == 'joker2' }
 
     if cards.length == 0 && cards_to_check.length < 3

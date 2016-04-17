@@ -58,13 +58,15 @@ class Round
     # @current_player.hand << self.steal_card(value: 'H3')
     # @current_player.hand << self.steal_card(value: 'C3')
 
+    @current_player.hand << self.steal_card(value: 'H7')
+    @current_player.hand << self.steal_card(value: 'C7')
+    @current_player.hand << self.steal_card(value: 'D7')
 
-
-    # Meld.new(round: self, player: @players[1], cards: [
-    #     Card.new(suite: 'H', rank: 3, value: 'D3'),
-    #     Card.new(suite: 'S', rank: 3, value: 'S3'),
-    #     Card.new(suite: 'D', rank: 3, value: 'D3')
-    # ]).call()
+    Meld.new(round: self, player: @players[1], cards: [
+        Card.new(suite: 'H', rank: 3, value: 'D3'),
+        Card.new(suite: 'S', rank: 3, value: 'S3'),
+        Card.new(suite: 'D', rank: 3, value: 'D3')
+    ]).call()
     #
     # Meld.new(round: self, player: @players[2], cards: [
     #     Card.new(suite: 'H', rank: 4, value: 'H3'),
@@ -96,11 +98,11 @@ class Round
   end
 
   def can_draw_card?
-    !player_won && selected_player && !selected_player.has_drawn_card
+    !player_won && selected_player && !selected_player.has_drawn_card && selected_player == current_player
   end
 
   def can_play_hand?
-    !player_won && selected_player && selected_player.has_drawn_card
+    !player_won && selected_player && selected_player.has_drawn_card && selected_player == current_player
   end
 
   def deal
