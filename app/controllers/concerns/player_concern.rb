@@ -8,20 +8,24 @@ module PlayerConcern
 
   def game_from_parameters
     @game_id = player_params[:game_id]
-    @round = Round.get(game_id: 1)
+    @round = Round.get(game_id: @game_id)
   end
 
   def player_from_parameters
-    @player_id = player_params[:player_id].to_i
+    @player_id = player_id.to_i
     @player = @round.player_by_id(@player_id)
 
     @round.select_player(@player)
   end
 
+  def player_id
+    player_params[:player_id]
+  end
+
   private
 
   def player_params
-    params.permit(:game_id, :player_id)
+    params.permit(:game_id, :player_id, :id)
   end
 end
 

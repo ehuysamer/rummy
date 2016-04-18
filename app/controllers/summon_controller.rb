@@ -1,6 +1,6 @@
 class SummonController < ApplicationController
   def create
-    round = Round.get(game_id: 1)
+    round = Round.get(game_id: params[:game_id])
 
     player_id = params[:player_id].to_i
     round.select_player(round.players[player_id])

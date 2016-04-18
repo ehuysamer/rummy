@@ -1,10 +1,18 @@
 class PlayersController < ApplicationController
   include PlayerConcern
 
+  def index
+    redirect_to url_for(:controller => :players, :action => :show, :id => @round.player_id(@round.current_player), :game_id => @game_id)
+  end
+
   def show
     @pickup = @round.pickup
     @discard = @round.discard
     @players = @round.players
+  end
+
+  def player_id
+    player_params[:id]
   end
 end
 

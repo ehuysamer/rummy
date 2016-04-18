@@ -10,11 +10,9 @@ class Draw
     #TODO: When no cards left to draw, turn around discard stack
     #TODO: Naming consistency; stack -> card_stack
 
-    @round.select_player(@player)
-
     card = @round.pickup.pop
     card.chosen = true
-    @round.selected_player.hand << card
+    @player.hand << card
 
     true
   end

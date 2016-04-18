@@ -89,7 +89,7 @@
                   type: 'submit',
                   name: 'draw',
                   value: card.value) do %>
-              <%= card.value %>
+                  <%= raw card_button_text(card) %>
           <% end %>
         <% end %>
     <% end # form %>

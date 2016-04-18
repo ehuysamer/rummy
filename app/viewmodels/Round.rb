@@ -157,8 +157,16 @@ class Round
         (players.select{|player| player.hand.find(value: value, rank: rank, suite: suite) }.first&.hand&.remove_by_value(value: value, rank: rank, suite: suite))
   end
 
+  def player_id(player)
+    players.index(player)
+  end
+
+  def current_player_id
+    players.index(@current_player)
+  end
+
   def next_player
-    index = players.index(@current_player)
+    index = player_id(@current_player)
     index = (index + 1) % players.length
     @current_player = players[index]
   end

@@ -17,6 +17,8 @@ class Meld
         player.melds << meld
       end
 
+      #TODO: Prevent melding with jokers if values not properly set
+
       meld.concat(cards)
       player.hand.remove_cards(cards)
       cards.each {|card| card.owner = player}

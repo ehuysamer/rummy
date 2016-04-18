@@ -10,19 +10,16 @@ class MeldController < ApplicationController
     #selected = round.selected_player.hand.select(cards&.map {|k,v| k})
 
     selection_submitted = cards.select{|k,v|v.length>1}.map{|k,v| k}
-    selected = round.selected_player.hand.select(selection_submitted)
+    selected = @round.selected_player.hand.select(selection_submitted)
 
     joker1 = params[:joker1]
     joker2 = params[:joker2]
     if joker1 || joker2
-
-      byebug #CONFIRM DATA IN EITHER J1 OR J2
-
       JokerImpersonate.new(@round, @player, joker1, joker2).call
     end
 
-    Meld.new(round: round, player: round.selected_player, cards: selected).call
+    Meld.new(round: @round, player: @round.selected_player, cards: selected).call
 
-    redirect_to url_for(:controller => :players, :action => :show, :id => @player_id, :game_id => @game_id)
+    redirect_to url_for(:controller => :players, :action => :show, :id => @round.current_player_id, :game_id => @game_id)
   end
 end
