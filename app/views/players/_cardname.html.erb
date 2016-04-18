@@ -1,0 +1,7 @@
+<% if (card.nil?) %>
+    N/A
+<% elsif (card.joker) %>
+    <%= joker_symbol %>
+<% else %>
+    <span style="padding: 0; margin: 0; color: <%= suite_color(card.suite) %>"><%= suite_symbol(card.suite) %></span><%= Card.rank_to_name(card.rank) %>
+<% end %>

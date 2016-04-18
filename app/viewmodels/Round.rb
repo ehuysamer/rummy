@@ -61,6 +61,7 @@ class Round
     @current_player.hand << self.steal_card(value: 'H7')
     @current_player.hand << self.steal_card(value: 'C7')
     @current_player.hand << self.steal_card(value: 'D7')
+    @current_player.hand << self.steal_card(value: 'joker')
 
     Meld.new(round: self, player: @players[1], cards: [
         Card.new(suite: 'H', rank: 3, value: 'D3'),

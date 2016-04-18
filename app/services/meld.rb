@@ -19,6 +19,10 @@ class Meld
       meld.concat(cards)
       player.hand.remove_cards(cards)
       cards.each {|card| card.owner = player}
+
+      if player.has_won
+        @round.next_player
+      end
     end
   end
 

@@ -129,18 +129,21 @@ class CardStack
   def sweep_from(value)
     position = @cards.find_index{ |card| card.value == value }
     returned = @cards.last(@cards.length - position)
-    @cards = @cards - returned
+    @cards -= returned
+    cards.each{|card| card.chosen = false}
     returned
   end
 
   def pick(values)
     picked = @cards.select{ |card| values.include?(card.value) }
     @cards -= picked
+    cards.each{|card| card.chosen = false}
     picked
   end
 
   def remove_cards(cards)
     @cards -= cards
+    cards.each{|card| card.chosen = false}
   end
 
   def select(values)

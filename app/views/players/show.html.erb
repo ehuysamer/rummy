@@ -43,8 +43,11 @@
     <%= form_tag(:controller => :meld, :action => :create, :player_id => @player_id) do %>
 
       <% @round.selected_player.hand.sorted.each do |card| %>
-          <%#= check_box('cards', card.value, {:multiple => true}, card.value) %><%= raw card_button_text(card) %>
+          <%#= check_box('cards', card.value, {:multiple => true}, card.value) %>
+          <span style="padding: 0px 3px">
           <%= check_box('cards', card.value, {:multiple => true, checked: !!card.chosen}, card.value) %>
+          <%= raw card_button_text(card) %>
+          </span>
       <% end %>
 
       <div>
@@ -105,31 +108,42 @@
     <% end # form %>
   <% end %>
 
+<% if @round.can_play_hand? %>
   <div style="font-size:16px; font-weight: bold">Joker replacement</div>
-  <div>JOKER1: <%= joker1 = @round.find_card(value: 'joker'); (joker1&.suite || '') + (joker1&.rank&.to_s || '') %></div>
-  <div>JOKER2: <%= joker2 = @round.find_card(value: 'joker2'); (joker2&.suite || '') + (joker2&.rank&.to_s || '') %></div>
-
-  <% if @round.can_play_hand? %>
     <%= form_tag(:controller => :joker_grab, :action => :create, :player_id => @player_id) do %>
+
+      <%
+        joker1 = @round.find_card(value: 'joker')
+        joker2 = @round.find_card(value: 'joker2')
+        #<%= raw card_button_text(card)
+        #<%= raw card_button_text(card)
+      %>
+      <div>Joker 1:
         <% @round.selected_player.hand.sorted.compact.each do |card|
-          if joker1.suite == card.suite && joker1.rank == card.rank %>
-              <%= button_tag(
-                      type: 'submit',
-                      name: 'card',
-                      value: card.value) do %>
-                  <%= raw card_button_text(card) %>
-              <% end %>
-          <% end
-          if joker2.suite == card.suite && joker2.rank == card.rank %>
-            <%= button_tag(
-                  type: 'submit',
-                  name: 'card',
-                  value: card.value) do %>
-              <%= raw card_button_text(card) %>
+          if joker1.suite == card.suite && joker1.rank == card.rank && !card.joker %>
+                <%= button_tag(
+                        type: 'submit',
+                        name: 'card',
+                        value: card.value) do %>
+                    <%= raw card_button_text(card) %>
+                <% end %>
             <% end %>
-          <% end %>
-      <% end %>
+        <% end %>
+      </div>
+
+      <div>Joker 2:
+        <% @round.selected_player.hand.sorted.compact.each do |card|
+          if joker2.suite == card.suite && joker2.rank == card.rank && !card.joker %>
+                <%= button_tag(
+                        type: 'submit',
+                        name: 'card',
+                        value: card.value) do %>
+                    <%= raw card_button_text(card) %>
+                <% end %>
+            <% end %>
+        <% end %>
+      </div>
     <% end # form %>
-  <% end %>
+<% end %>
 
 </div>

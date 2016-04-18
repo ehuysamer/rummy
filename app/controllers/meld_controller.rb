@@ -15,8 +15,6 @@ class MeldController < ApplicationController
     selection_submitted = cards.select{|k,v|v.length>1}.map{|k,v| k}
     selected = round.selected_player.hand.select(selection_submitted)
 
-    byebug
-
     #TODO: Check if joker is in particular players' hand
     joker1 = params[:joker1]
     if joker1

@@ -12,6 +12,10 @@ module PlayersHelper
     }[letter]
   end
 
+  def joker_symbol
+    ['1F0DF'.hex].pack('U')
+  end
+
   def suite_color(letter)
     {
         'S' => 'blue',
@@ -28,12 +32,13 @@ module PlayersHelper
 
     if card.suite.nil? || card.rank.nil?
       if card.joker
-        'Joker'
+        joker_symbol
       else
         card.value
       end
     else
-      '<span style="color: ' + suite_color(card.suite) + '">' + suite_symbol(card.suite) + '</span>' + Card.rank_to_name(card.rank)
+      #TODO: Sort this out
+      '<span style="padding: 0; margin: 0; color: ' + suite_color(card.suite) + '">' + suite_symbol(card.suite) + '</span>' + Card.rank_to_name(card.rank)
     end
  end
 end
