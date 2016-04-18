@@ -1,12 +1,9 @@
 class DiscardController < ApplicationController
+  include PlayerConcern
+
   def create
-    round = Round.get(game_id: 1)
+    Discard.new(round: @round, player: @player, card_value: params[:discard]).call
 
-    player_id = params[:player_id].to_i
-    #round.select_player(round.players[player_id])
-
-    Discard.new(round: round, player: round.players[player_id], card_value: params[:discard]).call
-
-    redirect_to url_for(:controller => :players, :action => :show, :id => round.current_player.id, :game_id => '1')
+    redirect_to url_for(:controller => :players, :action => :show, :id => @player_id, :game_id => @game_id)
   end
 end

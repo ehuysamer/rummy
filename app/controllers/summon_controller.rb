@@ -12,4 +12,3 @@ class SummonController < ApplicationController
   end
 end
 
-#TODO: Meld to suite before rank

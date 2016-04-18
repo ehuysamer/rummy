@@ -6,8 +6,7 @@ class Discard
   end
 
   def call
-    #TODO: Player rotation occurs on discard
-    #TODO: Check if player has used the card if he swiped
+    #TODO: Check if player has used the card if he swiped more than 1
 
     #round.discard << round.selected_player.hand.remove_by_value(params[:discard])
 
@@ -23,6 +22,6 @@ class Discard
 
     @round.next_player
 
-    return true
+    true
   end
 end

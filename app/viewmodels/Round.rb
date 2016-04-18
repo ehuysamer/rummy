@@ -31,7 +31,7 @@ class Round
 
     @players = (1..num_players).map do |index|
       hand = CardStack.new
-      Player.new(index - 1, 'Player ' + index.to_s, hand)
+      Player.new(index - 1, 'Player ' + index.to_s, hand, self)
     end
 
     @current_player = @players[0]
@@ -58,17 +58,17 @@ class Round
     # @current_player.hand << self.steal_card(value: 'H3')
     # @current_player.hand << self.steal_card(value: 'C3')
 
-    @current_player.hand << self.steal_card(value: 'H7')
-    @current_player.hand << self.steal_card(value: 'C7')
-    @current_player.hand << self.steal_card(value: 'D7')
-    @current_player.hand << self.steal_card(value: 'joker')
-
-    Meld.new(round: self, player: @players[1], cards: [
-        Card.new(suite: 'H', rank: 3, value: 'D3'),
-        Card.new(suite: 'S', rank: 3, value: 'S3'),
-        Card.new(suite: 'D', rank: 3, value: 'D3')
-    ]).call()
+    # @current_player.hand << self.steal_card(value: 'H7')
+    # @current_player.hand << self.steal_card(value: 'C7')
+    # @current_player.hand << self.steal_card(value: 'D7')
+    # @current_player.hand << self.steal_card(value: 'joker')
     #
+    # Meld.new(round: self, player: @players[1], cards: [
+    #     Card.new(suite: 'H', rank: 3, value: 'D3'),
+    #     Card.new(suite: 'S', rank: 3, value: 'S3'),
+    #     Card.new(suite: 'D', rank: 3, value: 'D3')
+    # ]).call()
+
     # Meld.new(round: self, player: @players[2], cards: [
     #     Card.new(suite: 'H', rank: 4, value: 'H3'),
     #     Card.new(suite: 'H', rank: 5, value: 'H5'),
@@ -161,6 +161,10 @@ class Round
     index = players.index(@current_player)
     index = (index + 1) % players.length
     @current_player = players[index]
+  end
+
+  def player_by_id(id)
+    players[id.to_i]
   end
 
   def player_won

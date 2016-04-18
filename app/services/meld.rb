@@ -12,6 +12,7 @@ class Meld
       if meld.cards.length == 0
         meld.owner = player
 
+        #TODO: Meld to suite before rank
         #TODO: Remove melds object from player
         player.melds << meld
       end
@@ -24,6 +25,8 @@ class Meld
         @round.next_player
       end
     end
+
+    true
   end
 
   private
