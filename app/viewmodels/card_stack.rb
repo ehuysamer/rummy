@@ -15,6 +15,10 @@ class CardStack
     @owner = nil
   end
 
+  def to_a
+    @cards
+  end
+
   def can_meld(cards_to_check)
     #WRONG: The following will pass because rank.nil? is true if this is a stack for suites
     #cards.all? { |card| card.rank == rank || card.suite == suite || card.value == 'joker' || card.value == 'joker2' }
@@ -159,7 +163,11 @@ class CardStack
   end
 
   def to_s
-    @cards.compact.map { |card| card.value }.to_s
+    to_ids.join(',')
+  end
+
+  def to_ids
+    @cards.compact.map { |card| card.value }
   end
 
   #TODO: IsTop(Card)

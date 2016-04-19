@@ -78,7 +78,6 @@ RSpec.describe JokerGrab, type: :class do
     end
 
     context 'Other player has melded with jokers owned by current player' do
-
       it 'has added the swap card to the meld, removing joker1' do
         expect(meld.cards.map{|card| card.value}).to eq %w(joker2 SA HA)
       end

@@ -5,7 +5,9 @@ Rails.application.routes.draw do
   #get 'static_pages/help'
   #get 'home' => 'static_pages#home'
 
+  #TODO: Home/welcome page
   #TODO: Sort out routes; wrt 'only'
+  #TODO: Add some animations
   resources :games do #, only: [:show]  do #,except: [] do
     resources :players, only: [:show, :index] do  #, param: :player_id
       #[:draw, :discard, :draw_discarded, :meld, :joker_grab, :summon].each { |resource| resources resource, only: :create }
