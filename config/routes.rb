@@ -5,20 +5,20 @@ Rails.application.routes.draw do
   #get 'static_pages/help'
   #get 'home' => 'static_pages#home'
 
-  #TODO: Sort this out; wrt 'only'
+  #TODO: Sort out routes; wrt 'only'
   resources :games do #, only: [:show]  do #,except: [] do
-    resources :players do #, only: [:show] do
-      resources :draw #, only: [:create]
-      resources :discard #, only: [:create]
-      resources :draw_discarded #, only: [:create]
-      resources :meld #, only: [:create]
-      resources :joker_grab #, only: [:create]
-      resources :summon #, only: [:create]
+    resources :players, only: [:show, :index] do  #, param: :player_id
+      #[:draw, :discard, :draw_discarded, :meld, :joker_grab, :summon].each { |resource| resources resource, only: :create }
+
+      resources :draw, only: [:create]
+      resources :discard, only: [:create]
+      resources :draw_discarded, only: [:create]
+      resources :meld, only: [:create]
+      resources :joker_grab, only: [:create]
+      resources :summon, only: [:create]
     end
+    resources :reset
   end
-
-  resources :reset
-
 
 
   # The priority is based upon order of creation: first created -> highest priority.

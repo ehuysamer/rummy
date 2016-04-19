@@ -91,12 +91,20 @@ class CardStack
     @cards << Card.new(value: 'joker2', joker: true)
   end
 
-  def sorted
+  def sorted(sort_by: :suite)
     @cards.dup.compact.sort do |card1, card2|
-      if card1.suite != card2.suite
-        card1.suite <=> card2.suite || 0
-      else
-        card1.rank <=> card2.rank || 0
+      if sort_by == :suite
+        if card1.suite != card2.suite
+          card1.suite <=> card2.suite || 0
+        else
+          card1.rank <=> card2.rank || 0
+        end
+      elsif sort_by == :rank
+        if card1.rank != card2.rank
+          card1.rank <=> card2.rank || 0
+        else
+          card1.suite <=> card2.suite || 0
+        end
       end
     end
   end
@@ -106,7 +114,7 @@ class CardStack
   end
 
   def find(value: nil, rank: nil, suite: nil)
-    @cards.find{ |card| (value.nil? || card.value == value) && (rank.nil? || card.rank == rank) && (suite.nil? || card.suite == suite)}
+    @cards.compact.find{ |card| (value.nil? || card.value == value) && (rank.nil? || card.rank == rank) && (suite.nil? || card.suite == suite)}
   end
 
   def remove_by_value(value: nil, rank: nil, suite: nil)
@@ -147,11 +155,11 @@ class CardStack
   end
 
   def select(values)
-    @cards.select{ |card| values.include?(card.value) }
+    @cards.compact.select{ |card| values.include?(card.value) }
   end
 
   def to_s
-    @cards.map { |card| card.value }.to_s
+    @cards.compact.map { |card| card.value }.to_s
   end
 
   #TODO: IsTop(Card)

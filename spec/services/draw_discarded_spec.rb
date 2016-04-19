@@ -18,7 +18,7 @@ RSpec.describe DrawDiscarded, type: :class do
     DrawDiscarded.new(round: round, player: player, card: from).call
   end
 
-  let(:player) { round.selected_player }
+  let(:player) { round.players[0] }
   let(:from) { 'H4' }
   let(:result) { player.hand.cards.map{ |card| card.value } }
   let(:discard_stack_cards) { round.discard.cards.map{ |card| card.value } }

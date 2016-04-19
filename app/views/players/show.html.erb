@@ -4,7 +4,7 @@
 </div>
 
 <div class="zone players">
-  <% @players.select{ |player| player != @round.selected_player }.each.with_index do |player, index| %>
+  <% @players.select{ |player| player != @player }.each.with_index do |player, index| %>
     <%= render partial: 'player', locals: { position: Position.new(left: 10, top: 10 + index * 130), player: player, round: @round } %>
     <%= render partial: 'stack', locals: { position: Position.new(left: 100, top: 10 + index * 130), card_stack: player.hand, spacing_x: 12, spacing_y: 0, back: true, selectable: false, sorted: true } %>
     <%= render partial: 'melds', locals: { position: Position.new(left: player.hand.length * 24 + 10 + 90, top: 10 + index * 130), round: @round, player: player, selectable: false } %>
@@ -13,9 +13,9 @@
 </div>
 
 <div class="zone user">
-  <%= render partial: 'player', locals: { position: Position.new(left: 10, bottom: 10), player: @round.selected_player, round: @round } %>
-  <%= render partial: 'stack', locals: { position: Position.new(left: 100, top: 20), card_stack: @round.selected_player.hand, spacing_x: 12, spacing_y: 0, back: false, selectable: (@round.selected_player == @round.current_player && @round.selected_player.has_drawn_card), sorted: true } %>
-  <%= render partial: 'melds', locals: { position: Position.new(left: 100 + @round.selected_player.hand.length * 12 + 10 + 90, top: 20), round: @round, player: @round.selected_player } %>
+  <%= render partial: 'player', locals: { position: Position.new(left: 10, bottom: 10), player: @player, round: @round } %>
+  <%= render partial: 'stack', locals: { position: Position.new(left: 100, top: 20), card_stack: @player.hand, spacing_x: 12, spacing_y: 0, back: false, selectable: (@player == @round.current_player && @player.has_drawn_card), sorted: true } %>
+  <%= render partial: 'melds', locals: { position: Position.new(left: 100 + @player.hand.length * 12 + 10 + 90, top: 20), round: @round, player: @player } %>
 </div>
 
 <div style="position: absolute; top: 0px; right: 20px; width: 200px; height: 400px; background-color: rgba(0, 100, 0, 0.5); overflow: auto; padding: 10px; margin-top: 20px">
@@ -25,12 +25,12 @@
     <div style="font-size:16px; font-weight: bold">Discard</div>
 
       <%= form_tag(:controller => :discard, :action => :create, :player_id => @player_id) do %>
-        <% @round.selected_player.hand.sorted.each do |card| %>
+        <% @player.hand.sorted.each do |card| %>
             <%= button_tag(
                     type: 'submit',
                     name: 'discard',
                     value: card.value) do %>
-                <%= raw card_button_text(card) %>
+                <%= raw card_button_text(card, true) %>
             <% end %>
         <% end %>
     <% end # form %>
@@ -42,11 +42,11 @@
 
     <%= form_tag(:controller => :meld, :action => :create, :player_id => @player_id) do %>
 
-      <% @round.selected_player.hand.sorted.each do |card| %>
+      <% @player.hand.sorted.each do |card| %>
           <%#= check_box('cards', card.value, {:multiple => true}, card.value) %>
           <span style="padding: 0px 3px">
           <%= check_box('cards', card.value, {:multiple => true, checked: !!card.chosen}, card.value) %>
-          <%= raw card_button_text(card) %>
+          <%= raw card_button_text(card, true) %>
           </span>
       <% end %>
 
@@ -59,10 +59,10 @@
         <% end %>
       </div>
 
-      <% if @round.selected_player.hand.find(value: 'joker') %>
+      <% if @player.hand.find(value: 'joker') %>
         <div>Joker 1: <%= text_field_tag 'joker1' %></div>
       <% end %>
-      <% if @round.selected_player.hand.find(value: 'joker2') %>
+      <% if @player.hand.find(value: 'joker2') %>
         <div>Joker 2: <%= text_field_tag 'joker2' %></div>
       <% end %>
 
@@ -89,7 +89,7 @@
                   type: 'submit',
                   name: 'draw',
                   value: card.value) do %>
-                  <%= raw card_button_text(card) %>
+                  <%= raw card_button_text(card, true) %>
           <% end %>
         <% end %>
     <% end # form %>
@@ -119,26 +119,26 @@
         #<%= raw card_button_text(card)
       %>
       <div>Joker 1:
-        <% @round.selected_player.hand.sorted.compact.each do |card|
+        <% @player.hand.sorted.compact.each do |card|
           if joker1.suite == card.suite && joker1.rank == card.rank && !card.joker %>
                 <%= button_tag(
                         type: 'submit',
                         name: 'card',
                         value: card.value) do %>
-                    <%= raw card_button_text(card) %>
+                    <%= raw card_button_text(card, false) %>
                 <% end %>
             <% end %>
         <% end %>
       </div>
 
       <div>Joker 2:
-        <% @round.selected_player.hand.sorted.compact.each do |card|
+        <% @player.hand.sorted.compact.each do |card|
           if joker2.suite == card.suite && joker2.rank == card.rank && !card.joker %>
                 <%= button_tag(
                         type: 'submit',
                         name: 'card',
                         value: card.value) do %>
-                    <%= raw card_button_text(card) %>
+                    <%= raw card_button_text(card, false) %>
                 <% end %>
             <% end %>
         <% end %>

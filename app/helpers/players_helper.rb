@@ -16,21 +16,25 @@ module PlayersHelper
     ['1F0DF'.hex].pack('U')
   end
 
-  def suite_color(letter)
+  def suite_color(card)
     {
         'S' => 'blue',
         'H' => 'red',
         'D' => 'red',
         'C' => 'black',
-        nil => 'gray',
-        '' => 'gray'
-    }[letter]
+        nil => 'black',
+        '' => 'black'
+    }[card.suite]
   end
 
-  def card_button_text(card)
+  #TODO: Consider either using card view or deleting card view
+  def card_button_text(card, show_joker)
     return 'N/A' if card.nil?
 
-    if card.suite.nil? || card.rank.nil?
+    #TODO: Needs some fixing up
+    if card.joker && show_joker
+      joker_symbol
+    elsif card.suite.nil? || card.rank.nil?
       if card.joker
         joker_symbol
       else
@@ -38,7 +42,7 @@ module PlayersHelper
       end
     else
       #TODO: Sort this out
-      '<span style="padding: 0; margin: 0; color: ' + suite_color(card.suite) + '">' + suite_symbol(card.suite) + '</span>' + Card.rank_to_name(card.rank)
+      '<span style="padding: 0; margin: 0; color: ' + suite_color(card) + '">' + suite_symbol(card.suite) + '</span>' + Card.rank_to_name(card.rank)
     end
  end
 end
