@@ -7,7 +7,7 @@ RSpec.describe JokerGrab, type: :class do
   let(:round) { Round.new(4) }
   let(:player1) { round.players[3] }
   let(:player2) { round.current_player }
-  let(:cards_to_meld) { %w(joker joker2 SA) }
+  let(:card_values_to_meld) { %w(joker joker2 SA) }
   let(:cards_p1) { %w(H2 H3 H4 joker joker2 SA) }
   let(:cards_p2) { %w(HA DA) }
   let(:joker1_rank) { 1 }
@@ -15,7 +15,7 @@ RSpec.describe JokerGrab, type: :class do
   let(:joker2_rank) { 1 }
   let(:joker2_suite) { 'D' }
   let(:card_to_grab) { 'HA' }
-  let(:meld) { round.find_meld(player1.hand.select(cards_to_meld)) }
+  let(:meld) { round.find_meld(player1.hand.select(card_values_to_meld)) }
 
   before do
     cards_p1.each { |card| player1.hand << round.steal_card(value: card) }
@@ -27,14 +27,14 @@ RSpec.describe JokerGrab, type: :class do
     #byebug
 
     JokerImpersonate.new(round, player1, 'HA', 'DA').call
-    Meld.new(round: round, player: player1, cards: player1.hand.select(cards_to_meld)).call
+    Meld.new(round: round, player: player1, cards: player1.hand.select(card_values_to_meld)).call
 
     #byebug
   end
 
   context 'sets up the test case' do
     it 'puts the cards in the meld' do
-      expect(meld.cards.map{|card| card.value}).to eq cards_to_meld
+      expect(meld.cards.map{|card| card.value}).to eq card_values_to_meld
     end
 
     describe 'impersonates the jokers correctly' do
@@ -67,7 +67,7 @@ RSpec.describe JokerGrab, type: :class do
     end
 
     it 'has none of the cards left in player\'s hand' do
-      expect(player1.hand.cards.map{|card| card.value}).to have_none cards_to_meld
+      expect(player1.hand.cards.map{|card| card.value}).to have_none card_values_to_meld
     end
   end
 

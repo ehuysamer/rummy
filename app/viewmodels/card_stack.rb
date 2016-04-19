@@ -27,13 +27,16 @@ class CardStack
       return false
     end
 
+    #byebug
+
     if suite
-      if cards_to_check.all? { |card| card.suite == suite || card.value == 'joker' || card.value == 'joker2' }
+      if cards_to_check.all? { |card| card.suite == suite } #TODO: CHECK: || card.value == 'joker' || card.value == 'joker2' }
         test_list = cards.clone.concat(cards_to_check)
+        #TODO: #TEST: is_consecutive
         CardStack.is_consecutive test_list
       end
     elsif rank
-      cards_to_check.all? { |card| card.rank == rank || card.value == 'joker' || card.value == 'joker2' }
+      cards_to_check.all? { |card| card.rank == rank } #TODO: CHECK:  || card.value == 'joker' || card.value == 'joker2' }
     end
   end
 
