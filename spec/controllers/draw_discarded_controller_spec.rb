@@ -9,11 +9,11 @@ RSpec.describe DrawDiscardedController, type: :controller do
       let!(:round) { Round.get(game_id: game_id, num_players: 4) }
 
       before do
-        %w(H2 H3 H4 H5 H6 H7 H8).each { |card| round.discard << round.steal_card(value: card) }
-        %w(S2 S3 S4 S5).each { |card| round.players[0].hand << round.steal_card(value: card) }
-        %w(S6 S7 S8 S9).each { |card| round.players[1].hand << round.steal_card(value: card) }
-        %w(D2 D3 D4 D5).each { |card| round.players[2].hand << round.steal_card(value: card) }
-        %w(D6 D7 D8 D9).each { |card| round.players[3].hand << round.steal_card(value: card) }
+        %w(H2 H3 H4 H5 H6 H7 H8).each { |card| round.discard << round.steal_card(id: card) }
+        %w(S2 S3 S4 S5).each { |card| round.players[0].hand << round.steal_card(id: card) }
+        %w(S6 S7 S8 S9).each { |card| round.players[1].hand << round.steal_card(id: card) }
+        %w(D2 D3 D4 D5).each { |card| round.players[2].hand << round.steal_card(id: card) }
+        %w(D6 D7 D8 D9).each { |card| round.players[3].hand << round.steal_card(id: card) }
 
         round.select_player(round.players[0])
       end
@@ -24,19 +24,19 @@ RSpec.describe DrawDiscardedController, type: :controller do
         end
 
         it 'has the cards swiped' do
-          expect(round.players[0].hand.cards.map{|card| card.value}).to have_all %w(H5 H6 H7 H8)
+          expect(round.players[0].hand.cards.map{|card| card.id}).to have_all %w(H5 H6 H7 H8)
         end
 
         it 'has the cards it had previously' do
-          expect(round.players[0].hand.cards.map{|card| card.value}).to have_all %w(S2 S3 S4 S5)
+          expect(round.players[0].hand.cards.map{|card| card.id}).to have_all %w(S2 S3 S4 S5)
         end
 
         it 'leaves the other cards on the discard pile' do
-          expect(round.discard.cards.map{|card| card.value}).to have_all %w(H2 H3 H4)
+          expect(round.discard.cards.map{|card| card.id}).to have_all %w(H2 H3 H4)
         end
 
         it 'takes the cards away from discard pile' do
-          expect(round.discard.cards.map{|card| card.value}).to have_none %w(H5 H6 H7 H8)
+          expect(round.discard.cards.map{|card| card.id}).to have_none %w(H5 H6 H7 H8)
         end
 
         it 'redirects to show' do

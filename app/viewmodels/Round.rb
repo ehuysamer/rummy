@@ -35,7 +35,7 @@ class Round
 
     @melds = []
     (1..13).each { |rank| @melds << CardStack.new(rank: rank) }
-    %w(S H C D).each { |suite| @melds << CardStack.new(suite: suite) }
+    Card::SUITES.each { |suite| @melds << CardStack.new(suite: suite) }
   end
 
   def can_draw?
@@ -65,34 +65,43 @@ class Round
     @selected_player = player
   end
 
+  # def find_card_stack(suite: nil, rank: nil, id: nil) #TODO: , card: nil)
+  #   result = pickup if pickup.find(id: id, rank: rank, suite: suite)
+  #   result = discard if !result && discard.find(id: id, rank: rank, suite: suite)
+  #   melds.each{|meld| result = meld if !result && meld.find(id: id, rank: rank, suite: suite) }
+  #   players.each{|player| result = player.hand if !result && player.hand.find(id: id, rank: rank, suite: suite)
+  #
+  #   result
+  # end
+
   def find_meld(cards)
     melds.find { |meld| meld.can_meld(cards) }
   end
 
-  def find_card(suite: nil, rank: nil, value: nil)
-    pickup.find(value: value, rank: rank, suite: suite) ||
-        discard.find(value: value, rank: rank, suite: suite) ||
-        (melds.select{|meld| meld.find(value: value, rank: rank, suite: suite) }.first&.find(value: value, rank: rank, suite: suite)) ||
-        (players.select{|player| player.hand.find(value: value, rank: rank, suite: suite) }.first&.hand&.find(value: value, rank: rank, suite: suite))
+  def find_card(suite: nil, rank: nil, id: nil)
+    pickup.find(id: id, rank: rank, suite: suite) ||
+        discard.find(id: id, rank: rank, suite: suite) ||
+        (melds.select{|meld| meld.find(id: id, rank: rank, suite: suite) }.first&.find(id: id, rank: rank, suite: suite)) ||
+        (players.select{|player| player.hand.find(id: id, rank: rank, suite: suite) }.first&.hand&.find(id: id, rank: rank, suite: suite))
   end
 
-  def find_cards_by_value(values)
-    values.map { |value| find_card(value: value) }
+  def find_cards_by_id(ids)
+    ids.map { |id| find_card(id: id) }
   end
 
-  def replace_card(value: nil, rank: nil, suite: nil, card: nil)
-    pickup.replace_by_value(value: value, rank: rank, suite: suite, card: card) ||
-        discard.replace_by_value(value: value, rank: rank, suite: suite, card: card) ||
-        (melds.select{|meld| meld.find(value: value, rank: rank, suite: suite) }.first&.replace_by_value(value: value, rank: rank, suite: suite, card: card)) ||
-        (players.select{|player| player.hand.find(value: value, rank: rank, suite: suite) }.first&.hand&.replace_by_value(value: value, rank: rank, suite: suite, card: card))
+  def replace_card(id: nil, rank: nil, suite: nil, card: nil)
+    pickup.replace_by_id(id: id, rank: rank, suite: suite, card: card) ||
+        discard.replace_by_id(id: id, rank: rank, suite: suite, card: card) ||
+        (melds.select{|meld| meld.find(id: id, rank: rank, suite: suite) }.first&.replace_by_id(id: id, rank: rank, suite: suite, card: card)) ||
+        (players.select{|player| player.hand.find(id: id, rank: rank, suite: suite) }.first&.hand&.replace_by_id(id: id, rank: rank, suite: suite, card: card))
   end
 
   #TODO: , card:nil
-  def steal_card(suite: nil, rank: nil, value: nil)
-    pickup.remove_by_value(value: value, rank: rank, suite: suite) ||
-        discard.remove_by_value(value: value, rank: rank, suite: suite) ||
-        (melds.select{|meld| meld.find(value: value, rank: rank, suite: suite) }.first&.remove_by_value(value: value, rank: rank, suite: suite)) ||
-        (players.select{|player| player.hand.find(value: value, rank: rank, suite: suite) }.first&.hand&.remove_by_value(value: value, rank: rank, suite: suite))
+  def steal_card(suite: nil, rank: nil, id: nil)
+    pickup.remove_by_id(id: id, rank: rank, suite: suite) ||
+        discard.remove_by_id(id: id, rank: rank, suite: suite) ||
+        (melds.select{|meld| meld.find(id: id, rank: rank, suite: suite) }.first&.remove_by_id(id: id, rank: rank, suite: suite)) ||
+        (players.select{|player| player.hand.find(id: id, rank: rank, suite: suite) }.first&.hand&.remove_by_id(id: id, rank: rank, suite: suite))
   end
 
   def player_id(player)

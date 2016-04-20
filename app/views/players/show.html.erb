@@ -29,7 +29,7 @@
             <%= button_tag(
                     type: 'submit',
                     name: 'discard',
-                    value: card.value) do %>
+                    value: card.id) do %>
                 <%= raw card_button_text(card, true) %>
             <% end %>
         <% end %>
@@ -45,7 +45,7 @@
       <% @player.hand.sorted.each do |card| %>
           <%#= check_box('cards', card.value, {:multiple => true}, card.value) %>
           <span style="padding: 0px 3px">
-          <%= check_box('cards', card.value, {:multiple => true, checked: !!card.chosen}, card.value) %>
+          <%= check_box('cards', card.id, {:multiple => true, checked: !!card.chosen}, card.id) %>
           <%= raw card_button_text(card, true) %>
           </span>
       <% end %>
@@ -59,10 +59,10 @@
         <% end %>
       </div>
 
-      <% if @player.hand.find(value: 'joker') %>
+      <% if @player.hand.find(id: 'joker') %>
         <div>Joker 1: <%= text_field_tag 'joker1' %></div>
       <% end %>
-      <% if @player.hand.find(value: 'joker2') %>
+      <% if @player.hand.find(id: 'joker2') %>
         <div>Joker 2: <%= text_field_tag 'joker2' %></div>
       <% end %>
 
@@ -88,7 +88,7 @@
           <%= button_tag(
                   type: 'submit',
                   name: 'draw',
-                  value: card.value) do %>
+                  value: card.id) do %>
                   <%= raw card_button_text(card, true) %>
           <% end %>
         <% end %>
@@ -113,8 +113,8 @@
     <%= form_tag(:controller => :joker_grab, :action => :create, :player_id => @player_id) do %>
 
       <%
-        joker1 = @round.find_card(value: 'joker')
-        joker2 = @round.find_card(value: 'joker2')
+        joker1 = @round.find_card(id: 'joker')
+        joker2 = @round.find_card(id: 'joker2')
         #<%= raw card_button_text(card)
         #<%= raw card_button_text(card)
       %>
@@ -124,7 +124,7 @@
                 <%= button_tag(
                         type: 'submit',
                         name: 'card',
-                        value: card.value) do %>
+                        value: card.id) do %>
                     <%= raw card_button_text(card, false) %>
                 <% end %>
             <% end %>
@@ -137,7 +137,7 @@
                 <%= button_tag(
                         type: 'submit',
                         name: 'card',
-                        value: card.value) do %>
+                        value: card.id) do %>
                     <%= raw card_button_text(card, false) %>
                 <% end %>
             <% end %>

@@ -7,25 +7,25 @@ class JokerGrab
 
   def call
     hand = @player.hand
-    card = hand.find(value: @card_submitted)
+    card = hand.find(id: @card_submitted)
     card.chosen = false
     hand.remove_cards([card])
 
-    joker_card = @round.find_card(value: 'joker')
+    joker_card = @round.find_card(id: 'joker')
     if joker_card.rank == card.rank && joker_card.suite == card.suite
       joker_card.chosen = false
       joker_card.rank = nil
       joker_card.suite = nil
-      hand << @round.replace_card(value: 'joker', card: card)
+      hand << @round.replace_card(id: 'joker', card: card)
       return true
     end
 
-    joker_card = @round.find_card(value: 'joker2')
+    joker_card = @round.find_card(id: 'joker2')
     if joker_card.rank == card.rank && joker_card.suite == card.suite
       joker_card.chosen = false
       joker_card.rank = nil
       joker_card.suite = nil
-      hand << @round.replace_card(value: 'joker2', card: card)
+      hand << @round.replace_card(id: 'joker2', card: card)
       return true
     end
 

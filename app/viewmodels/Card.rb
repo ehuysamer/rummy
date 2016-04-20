@@ -2,7 +2,7 @@ class Card
   #TODO: Change to attr_reader; all except 'owner'
   attr_accessor :chosen
   attr_accessor :back
-  attr_accessor :value
+  attr_accessor :id
   attr_accessor :suite
   attr_accessor :rank
   attr_accessor :owner
@@ -10,8 +10,8 @@ class Card
 
   #TODO: #REFACTOR: Change 'value' to 'id'
 
-  def initialize(value: '', suite: nil, rank: nil, back: false, chosen: false, owner: nil, joker: false)
-    @value = value
+  def initialize(id: '', suite: nil, rank: nil, back: false, chosen: false, owner: nil, joker: false)
+    @id = id
     @back = back
     @chosen = chosen
     @suite = suite
@@ -21,6 +21,15 @@ class Card
   end
 
   RANKS = %w(A 2 3 4 5 6 7 8 9 10 J Q K)
+  SUITES = %w(S H C D)
+
+  def score
+    #TODO: #TEST: Score
+    # Score is the impersonated score (outside the hand); or 50 if its inside the hand (no score)
+    10 if rank && rank > 10
+    50 if joker
+    rank || 0
+  end
 
   def self.rank_to_name(rank)
     RANKS[rank - 1]
@@ -30,76 +39,76 @@ class Card
     RANKS.find_index(name) + 1
   end
 
-  def self.suite_rank_to_value(suite, rank)
+  def self.suite_rank_to_id(suite, rank)
     suite + Card.rank_to_name(rank)
   end
 
-  def self.rank_of_value(value)
+  def self.rank_by_id(id)
     # [<JOKER>]<SUITE><RANK NAME>
     index = 0
     rank_name = nil
 
     # Joker (which is optional)
-    if index < value.length && value[index].downcase == 'j'
+    if index < id.length && id[index].downcase == 'j'
       index += 1
     end
 
     # Suite
-    if index < value.length
+    if index < id.length
       index += 1
     end
 
     # Rank digit 1
-    if index < value.length
-      rank_name = value[index]
+    if index < id.length
+      rank_name = id[index]
       index += 1
     end
 
     # Rank digit 2
-    if index < value.length
-      rank_name += value[index]
+    if index < id.length
+      rank_name += id[index]
       index += 1
     end
 
     name_to_rank(rank_name) if rank_name && rank_name.length > 0
   end
 
-  def self.suite_of_value(value)
+  def self.suite_by_id(id)
     index = 0
     rank_name = nil
 
     # Joker (which is optional)
-    if index < value.length && value[index].downcase == 'j'
+    if index < id.length && id[index].downcase == 'j'
       index += 1
     end
 
     # Suite
-    if index < value.length
-      value[index]
+    if index < id.length
+      id[index]
     else
       nil
     end
   end
 
   def self.create(suite: nil?, rank: nil?, joker: nil?)
-    Card.new(value: suite_rank_to_value(suite, rank), suite: suite, rank: rank, joker: joker)
+    Card.new(id: suite_rank_to_id(suite, rank), suite: suite, rank: rank, joker: joker)
   end
 
-  def self.create_from_value(value)
+  def self.create_from_id(id)
     suite = nil
-    rank = Card.rank_of_value(value)
+    rank = Card.rank_by_id(id)
 
-    if value[0] == 'J'
-      suite = value[1] if value.length >= 2
-      Card.new(suite: suite, rank: rank, value: 'JOKER', joker: true)
+    if id[0] == 'J'
+      suite = id[1] if id.length >= 2
+      Card.new(suite: suite, rank: rank, id: 'JOKER', joker: true)
     else
-      suite = value[0]
-      Card.new(suite: suite, rank: rank, value: value) #(suite + rank.to_s))
+      suite = id[0]
+      Card.new(suite: suite, rank: rank, id: id) #(suite + rank.to_s))
     end
   end
 
-  def compare_value_to(other)
-    value == other.value
+  def compare_id_to(other)
+    id == other.id
   end
 
   def compare_rank_suite_to(other)

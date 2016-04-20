@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Card, type: :class do
-  let(:card1) { Card.new(suite: 'D', rank: '5', value: 'D5') }
-  let(:card2) { Card.new(suite: 'D', rank: '5', value: 'D5') }
-  let(:card3) { Card.new(suite: 'H', rank: '1', value: 'H1') }
+  let(:card1) { Card.new(suite: 'D', rank: '5', id: 'D5') }
+  let(:card2) { Card.new(suite: 'D', rank: '5', id: 'D5') }
+  let(:card3) { Card.new(suite: 'H', rank: '1', id: 'H1') }
 
   describe 'rank_to_name' do
     it 'returns correct ranks for names' do
@@ -17,23 +17,23 @@ RSpec.describe Card, type: :class do
     end
   end
 
-  describe 'Get rank from value' do
+  describe 'Get rank from id' do
     it 'Returns the correct ranks for symbolic names' do
-      expect(%w(H10 HJ HQ HK HA).map{ |name| Card.rank_of_value(name) }).to eq [10, 11, 12, 13, 1]
+      expect(%w(H10 HJ HQ HK HA).map{ |name| Card.rank_by_id(name) }).to eq [10, 11, 12, 13, 1]
     end
 
     it 'Returns the correct ranks for symbolic names with joker' do
-      expect(%w(JH10 JHJ JHQ JHK JHA).map{ |name| Card.rank_of_value(name) }).to eq [10, 11, 12, 13, 1]
+      expect(%w(JH10 JHJ JHQ JHK JHA).map{ |name| Card.rank_by_id(name) }).to eq [10, 11, 12, 13, 1]
     end
   end
 
   describe 'Compare Value' do
     it 'returns true if cards have similar values' do
-      expect(card1.compare_value_to(card2)).to be_truthy
+      expect(card1.compare_id_to(card2)).to be_truthy
     end
 
     it 'returns false if cards have different values' do
-      expect(card1.compare_value_to(card3)).to be_falsey
+      expect(card1.compare_id_to(card3)).to be_falsey
     end
   end
 

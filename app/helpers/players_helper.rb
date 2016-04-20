@@ -38,7 +38,7 @@ module PlayersHelper
       if card.joker
         joker_symbol
       else
-        card.value
+        card.id
       end
     else
       #TODO: Sort this out

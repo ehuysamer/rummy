@@ -66,7 +66,7 @@ class CardStack
           #byebug
 
           if is_adjacent(card, already_there_card)
-            cards.delete_if {|card_to_check| card.value == card_to_check.value }
+            cards.delete_if {|card_to_check| card.id == card_to_check.id }
             target << card
             return card
           end
@@ -90,12 +90,12 @@ class CardStack
   def add_all
     %w(H C D S).each do |suite|
       (1..13).to_a.each do |rank|
-        @cards << Card.new(suite: suite, rank: rank, value: Card.suite_rank_to_value(suite, rank), joker: false)
+        @cards << Card.new(suite: suite, rank: rank, id: Card.suite_rank_to_id(suite, rank), joker: false)
       end
     end
 
-    @cards << Card.new(value: 'joker', joker: true)
-    @cards << Card.new(value: 'joker2', joker: true)
+    @cards << Card.new(id: 'joker', joker: true)
+    @cards << Card.new(id: 'joker2', joker: true)
   end
 
   def sorted(sort_by: :suite)
@@ -120,37 +120,37 @@ class CardStack
     @cards.shuffle!
   end
 
-  def find(value: nil, rank: nil, suite: nil)
-    @cards.compact.find{ |card| (value.nil? || card.value == value) && (rank.nil? || card.rank == rank) && (suite.nil? || card.suite == suite)}
+  def find(id: nil, rank: nil, suite: nil)
+    @cards.compact.find{ |card| (id.nil? || card.id == id) && (rank.nil? || card.rank == rank) && (suite.nil? || card.suite == suite)}
   end
 
-  def remove_by_value(value: nil, rank: nil, suite: nil)
-    card_found = find(value: value, rank: rank, suite: suite)
-    @cards.reject!{ |card| card.compare_value_to(card_found) } if card_found
+  def remove_by_id(id: nil, rank: nil, suite: nil)
+    card_found = find(id: id, rank: rank, suite: suite)
+    @cards.reject!{ |card| card.compare_id_to(card_found) } if card_found
     card_found
   end
 
-  def replace_by_value(value: nil, rank: nil, suite: nil, card: nil)
-    card_found = find(value: value, rank: rank, suite: suite)
+  def replace_by_id(id: nil, rank: nil, suite: nil, card: nil)
+    card_found = find(id: id, rank: rank, suite: suite)
 
     if card_found
-      @cards.reject!{ |c| c.compare_value_to(card_found) }
+      @cards.reject!{ |c| c.compare_id_to(card_found) }
       @cards << card
     end
 
     card_found
   end
 
-  def sweep_from(value)
-    position = @cards.find_index{ |card| card.value == value }
+  def sweep_from(id)
+    position = @cards.find_index{ |card| card.id == id }
     returned = @cards.last(@cards.length - position)
     @cards -= returned
     cards.each{|card| card.chosen = false}
     returned
   end
 
-  def pick(values)
-    picked = @cards.select{ |card| values.include?(card.value) }
+  def pick(ids)
+    picked = @cards.select{ |card| ids.include?(card.id) }
     @cards -= picked
     cards.each{|card| card.chosen = false}
     picked
@@ -161,8 +161,8 @@ class CardStack
     cards.each{|card| card.chosen = false}
   end
 
-  def select(values)
-    @cards.compact.select{ |card| values.include?(card.value) }
+  def select(ids)
+    @cards.compact.select{ |card| ids.include?(card.id) }
   end
 
   def to_s
@@ -170,7 +170,7 @@ class CardStack
   end
 
   def to_ids
-    @cards.compact.map { |card| card.value }
+    @cards.compact.map { |card| card.id }
   end
 
   #TODO: IsTop(Card)

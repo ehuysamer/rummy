@@ -27,4 +27,21 @@ class Player
   def melds
     round.melds.select{|meld| meld.owner == self}
   end
+
+  def score_in_hand
+    @hand.cards.compact.reduce(0){ |sum, card| sum += card.score }
+  end
+
+  def score_on_table
+    @round.melds.compact.reduce(0) do |sum_melds, meld|
+      sum_melds += meld.cards.compact.reduce(0) do |sum, card|
+          sum_card = card.score if card.owner == self
+          sum += sum_card || 0
+        end
+      end
+  end
+
+  def score
+    score_on_table - score_in_hand
+  end
 end

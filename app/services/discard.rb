@@ -1,8 +1,8 @@
 class Discard
-  def initialize(round: nil, player: nil, card_value: nil)
+  def initialize(round: nil, player: nil, card_id: nil)
     @round = round
     @player = player
-    @card_value = card_value
+    @card_id = card_id
   end
 
   def call
@@ -18,7 +18,7 @@ class Discard
     @player.hand.cards.each {|card| card.chosen = false}
 
     @player.has_drawn_card = false
-    @round.discard << @player.hand.remove_by_value(value: @card_value)
+    @round.discard << @player.hand.remove_by_id(id: @card_id)
     
     true
   end

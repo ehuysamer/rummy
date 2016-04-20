@@ -2,7 +2,7 @@ class DiscardController < ApplicationController
   include PlayerConcern
 
   def create
-    if Discard.new(round: @round, player: @player, card_value: params[:discard]).call
+    if Discard.new(round: @round, player: @player, card_id: params[:discard]).call
       @round.next_player
     end
 

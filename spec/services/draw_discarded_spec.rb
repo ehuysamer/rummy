@@ -9,7 +9,7 @@ RSpec.describe DrawDiscarded, type: :class do
   let(:round) do
     round = Round.new(4)
 
-    cards.each { |val| round.discard << round.steal_card(value: val) }
+    cards.each { |val| round.discard << round.steal_card(id: val) }
 
     round.deal
   end
@@ -20,8 +20,8 @@ RSpec.describe DrawDiscarded, type: :class do
 
   let(:player) { round.players[0] }
   let(:from) { 'H4' }
-  let(:result) { player.hand.cards.map{ |card| card.value } }
-  let(:discard_stack_cards) { round.discard.cards.map{ |card| card.value } }
+  let(:result) { player.hand.cards.map{ |card| card.id } }
+  let(:discard_stack_cards) { round.discard.cards.map{ |card| card.id } }
 
   context 'Sweep from middle' do
     let(:from) { 'H4' }

@@ -6,7 +6,7 @@ class SummonController < ApplicationController
     player = round.players[player_id]
     round.select_player(player)
 
-    player.hand.concat(params[:card].split(',').map{|value| round.steal_card(value: value)})
+    player.hand.concat(params[:card].split(',').map{|id| round.steal_card(id: id)})
     #round.selected_player.hand.concat(params[:card].split(',').map{|value| Card.create_from_value(value)})
 
     redirect_to url_for(:controller => :players, :action => :show, :id => player_id, :game_id => '1')

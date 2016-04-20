@@ -9,12 +9,12 @@ RSpec.describe Discard, type: :class do
   let(:round) do
     round = Round.new(4)
 
-    cards.each { |val| round.current_player.hand << round.steal_card(value: val) }
+    cards.each { |val| round.current_player.hand << round.steal_card(id: val) }
 
     round
   end
 
-  let!(:result) { Discard.new(round: round, player: round.current_player, card_value: card).call }
+  let!(:result) { Discard.new(round: round, player: round.current_player, card_id: card).call }
 
   context 'user discards an owned card' do
     it 'Returns true' do

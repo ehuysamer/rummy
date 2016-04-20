@@ -4,25 +4,27 @@ RSpec.describe Meld, type: :class do
   include CardStackHelpers
   include_context 'stack_samples'
 
-  let(:cards) { %w(joker joker2 D2 D3 D4 H4 S4) }
+  let(:cards) { %w(joker joker2 D2 D3 D4 H4 S4 C2 C3 C4 C5 C6 C7) }
   let(:cards_to_meld) { %w(D4 H4 S4) }
-  let(:meld_cards) { cards_to_meld.map{|card| round.find_card(value: card)} }
+  let(:meld_cards) { cards_to_meld.map{|card| round.find_card(id: card)} }
   let(:player) { round.current_player }
   let(:hand) { player.hand }
   let(:meld) { round.find_meld(meld_cards) }
   let(:joker1) { }
   let(:joker2) { }
-  let(:joker1_card) { round.find_card(value: 'joker') }
-  let(:joker2_card) { round.find_card(value: 'joker2') }
+  let(:joker1_card) { round.find_card(id: 'joker') }
+  let(:joker2_card) { round.find_card(id: 'joker2') }
   let(:round) { Round.new(4) }
   let(:result) { Meld.new(round:round, player:player, cards: meld_cards).call }
 
   before do
-    cards.each { |val| round.current_player.hand << round.steal_card(value: val) }
+    cards.each { |val| round.current_player.hand << round.steal_card(id: val) }
 
     if joker1 || joker2
       JokerImpersonate.new(round, player, joker1, joker2).call
     end
+
+    Meld.new(round: round, player: player, cards: %w(C2 C3 C4).map{|card| round.find_card(id: card)}).call
 
     result
   end
@@ -130,6 +132,29 @@ RSpec.describe Meld, type: :class do
     it 'assigns meld to player' do
       expect(meld.owner).to eq player
     end
+  end
+
+  #TODO: #TEST: Can't attach joker as card that's already placed
+
+  context 'attaches joker on its own' do
+    let(:cards_to_meld) { %w(joker) }
+    let(:joker1) { 'C5' }
+
+    it 'melds to correct stack' do
+      expect(meld.suite).to eq 'C'
+    end
+
+    it 'adds card to meld stack' do
+      expect(meld.to_ids).to have_all cards_to_meld
+    end
+
+    it 'removes card from hand' do
+      expect(hand.to_ids).to have_none cards_to_meld
+    end
+
+    # it 'assigns cards to player' do
+    #   expect(card.owner).to eq player
+    # end
   end
 
   context 'user melds rank already owned by other player' do

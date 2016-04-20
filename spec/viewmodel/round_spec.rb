@@ -33,15 +33,15 @@ RSpec.describe Round, type: :class do
 
   describe 'find' do
     it 'can find a rank meld' do
-      expect(round.find_meld(cards_from_values(%w(H3 C3 H3))).rank).to eq 3
+      expect(round.find_meld(cards_from_ids(%w(H3 C3 H3))).rank).to eq 3
     end
 
     it 'can find a suite meld' do
-      expect(round.find_meld(cards_from_values(%w(H3 H4 H5))).suite).to eq 'H'
+      expect(round.find_meld(cards_from_ids(%w(H3 H4 H5))).suite).to eq 'H'
     end
 
     it 'cannot find an inconsecutive meld' do
-      expect(round.find_meld(cards_from_values(%w(H3 H4 C7)))).to be_nil
+      expect(round.find_meld(cards_from_ids(%w(H3 H4 C7)))).to be_nil
     end
   end
 
