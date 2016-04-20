@@ -1,7 +1,6 @@
 class Player
   attr_reader :id
   attr_reader :name
-  attr_reader :melds
   attr_reader :hand
 
   attr_reader :round
@@ -10,9 +9,7 @@ class Player
   attr_accessor :card_must_use
 
   #TODO: card_must_use
-  #TODO: Game ended marker
 
-  #TODO: syncing inconsistency: player.melds and meld.owner
   def initialize(id, name, hand, round)
     @id = id
     @name = name
@@ -23,7 +20,11 @@ class Player
     @round = round
   end
 
-  def has_won
+  def won?
     hand.cards.length == 0
+  end
+
+  def melds
+    round.melds.select{|meld| meld.owner == self}
   end
 end

@@ -4,7 +4,7 @@
 
   <div><%= player.name %></div>
 
-  <div><%= player.has_won ? 'WON' : '' %></div>
+  <div><%= player.won? ? 'WON' : '' %></div>
 
   <% unless round.player_won %>
     <div><%= player.has_drawn_card ? 'DRAWN' : '' %></div>

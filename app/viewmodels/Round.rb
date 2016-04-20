@@ -154,6 +154,10 @@ class Round
         (players.select{|player| player.hand.find(value: value, rank: rank, suite: suite) }.first&.hand&.find(value: value, rank: rank, suite: suite))
   end
 
+  def find_cards_by_value(values)
+    values.map { |value| find_card(value: value) }
+  end
+
   def replace_card(value: nil, rank: nil, suite: nil, card: nil)
     pickup.replace_by_value(value: value, rank: rank, suite: suite, card: card) ||
         discard.replace_by_value(value: value, rank: rank, suite: suite, card: card) ||
@@ -161,6 +165,7 @@ class Round
         (players.select{|player| player.hand.find(value: value, rank: rank, suite: suite) }.first&.hand&.replace_by_value(value: value, rank: rank, suite: suite, card: card))
   end
 
+  #TODO: , card:nil
   def steal_card(suite: nil, rank: nil, value: nil)
     pickup.remove_by_value(value: value, rank: rank, suite: suite) ||
         discard.remove_by_value(value: value, rank: rank, suite: suite) ||
@@ -187,7 +192,7 @@ class Round
   end
 
   def player_won
-    players.select{ |player| player.has_won }.first
+    players.select{ |player| player.won? }.first
   end
 
   private

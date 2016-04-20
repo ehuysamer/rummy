@@ -12,7 +12,6 @@ class Meld
       if meld.cards.length == 0
         meld.owner = player
 
-        #TODO: Meld to suite before rank
         #TODO: Remove melds object from player
         player.melds << meld
       end
@@ -23,7 +22,7 @@ class Meld
       player.hand.remove_cards(cards)
       cards.each {|card| card.owner = player}
 
-      if player.has_won
+      if player.won?
         @round.next_player
       end
     end
