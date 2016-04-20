@@ -38,7 +38,7 @@ class Round
     %w(S H C D).each { |suite| @melds << CardStack.new(suite: suite) }
   end
 
-  def can_draw_card?
+  def can_draw?
     !player_won && selected_player && !current_player.has_drawn_card && selected_player == current_player
   end
 
@@ -59,14 +59,6 @@ class Round
     @discard << @pickup.pop
 
     self
-  end
-
-  def self.reset(game_id: nil)
-    @@round = nil
-  end
-
-  def self.get(game_id: nil)
-    @@round ||= Round.new(4).shuffle.deal
   end
 
   def select_player(player)
@@ -123,6 +115,16 @@ class Round
 
   def player_won
     players.select{ |player| player.won? }.first
+  end
+
+  def self.reset(game_id: 0)
+    #@@round[game_id] = nil
+    @@round = nil
+  end
+
+  def self.get(game_id: 0, num_players: 4)
+    #@@round[game_id] ||= Round.new(num_players).shuffle.deal
+    @@round ||= Round.new(num_players).shuffle.deal
   end
 
   private
