@@ -32,76 +32,10 @@ class Round
     end
 
     @current_player = @players[0]
-    #@selected_player = @players[0]
-
-    #@player_hands = (1..num_players).map { CardStack.new }
 
     @melds = []
     (1..13).each { |rank| @melds << CardStack.new(rank: rank) }
     %w(S H C D).each { |suite| @melds << CardStack.new(suite: suite) }
-
-    #TODO: Joker swap - set chosen to false
-    #TODO: Sorting no longer seems to work
-
-    # joker1 = self.steal_card(value: 'joker')
-    # #joker1.rank = 3
-    # #joker1.suite = 'H'
-    # @current_player.hand << joker1
-    #
-    # joker2 = self.steal_card(value: 'joker2')
-    # #joker2.rank = 3
-    # #joker2.suite = 'C'
-    # @current_player.hand << joker2
-    #
-    # @current_player.hand << self.steal_card(value: 'H3')
-    # @current_player.hand << self.steal_card(value: 'C3')
-    # card = self.steal_card(value: 'D3')
-    # @current_player.hand << card
-    # # Meld.new(round: self, player: @players[0], cards: [
-    # #     joker1,
-    # #     joker2,
-    # #     card
-    # # ]).call()
-    #
-    # @current_player.hand << self.steal_card(value: 'H7')
-    # @current_player.hand << self.steal_card(value: 'C7')
-    # @current_player.hand << self.steal_card(value: 'D7')
-    # #@current_player.hand << self.steal_card(value: 'joker')
-
-
-    # Meld.new(round: self, player: @players[1], cards: [
-    #     Card.new(suite: 'H', rank: 3, value: 'D3'),
-    #     Card.new(suite: 'S', rank: 3, value: 'S3'),
-    #     Card.new(suite: 'D', rank: 3, value: 'D3')
-    # ]).call()
-    #
-    # Meld.new(round: self, player: @players[2], cards: [
-    #     Card.new(suite: 'H', rank: 4, value: 'H3'),
-    #     Card.new(suite: 'H', rank: 5, value: 'H5'),
-    #     Card.new(suite: 'H', rank: 6, value: 'H6'),
-    #     Card.new(suite: 'H', rank: 7, value: 'H7')
-    # ]).call()
-    #
-    # Meld.new(round: self, player: @players[2], cards: [
-    #     Card.new(suite: 'H', rank: 5, value: 'H5'),
-    #     Card.new(suite: 'S', rank: 5, value: 'S5'),
-    #     Card.new(suite: 'D', rank: 5, value: 'D5')
-    # ]).call()
-    #
-    # Meld.new(round: self, player: @players[3], cards: [
-    #     Card.new(suite: 'H', rank: 8, value: 'H8'),
-    #     Card.new(suite: 'S', rank: 8, value: 'S8'),
-    #     Card.new(suite: 'D', rank: 8, value: 'D8')
-    # ]).call()
-    #
-    # Meld.new(round: self, player: @current_player, cards: [
-    #     Card.new(suite: 'H', rank: 2, value: 'H2'),
-    #     Card.new(suite: 'S', rank: 2, value: 'S2'),
-    #     Card.new(suite: 'D', rank: 2, value: 'D2')
-    # ]).call()
-    #
-    # @current_player.hand << Card.new(suite: 'C', rank: 3, value: 'C3')
-    # @current_player.hand << Card.new(suite: 'C', rank: 5, value: 'C5')
   end
 
   def can_draw_card?
@@ -121,10 +55,6 @@ class Round
     CARDS_DEALT[@players.length].times do
       @players.each { |player| player.hand << @pickup.pop }
     end
-
-    # while players[1].hand.cards.length > 0
-    #   players[1].hand.pop
-    # end
 
     @discard << @pickup.pop
 
@@ -199,3 +129,64 @@ class Round
 
   attr_reader :selected_player
 end
+
+
+# joker1 = self.steal_card(value: 'joker')
+# #joker1.rank = 3
+# #joker1.suite = 'H'
+# @current_player.hand << joker1
+#
+# joker2 = self.steal_card(value: 'joker2')
+# #joker2.rank = 3
+# #joker2.suite = 'C'
+# @current_player.hand << joker2
+#
+# @current_player.hand << self.steal_card(value: 'H3')
+# @current_player.hand << self.steal_card(value: 'C3')
+# card = self.steal_card(value: 'D3')
+# @current_player.hand << card
+# # Meld.new(round: self, player: @players[0], cards: [
+# #     joker1,
+# #     joker2,
+# #     card
+# # ]).call()
+#
+# @current_player.hand << self.steal_card(value: 'H7')
+# @current_player.hand << self.steal_card(value: 'C7')
+# @current_player.hand << self.steal_card(value: 'D7')
+# #@current_player.hand << self.steal_card(value: 'joker')
+
+
+# Meld.new(round: self, player: @players[1], cards: [
+#     Card.new(suite: 'H', rank: 3, value: 'D3'),
+#     Card.new(suite: 'S', rank: 3, value: 'S3'),
+#     Card.new(suite: 'D', rank: 3, value: 'D3')
+# ]).call()
+#
+# Meld.new(round: self, player: @players[2], cards: [
+#     Card.new(suite: 'H', rank: 4, value: 'H3'),
+#     Card.new(suite: 'H', rank: 5, value: 'H5'),
+#     Card.new(suite: 'H', rank: 6, value: 'H6'),
+#     Card.new(suite: 'H', rank: 7, value: 'H7')
+# ]).call()
+#
+# Meld.new(round: self, player: @players[2], cards: [
+#     Card.new(suite: 'H', rank: 5, value: 'H5'),
+#     Card.new(suite: 'S', rank: 5, value: 'S5'),
+#     Card.new(suite: 'D', rank: 5, value: 'D5')
+# ]).call()
+#
+# Meld.new(round: self, player: @players[3], cards: [
+#     Card.new(suite: 'H', rank: 8, value: 'H8'),
+#     Card.new(suite: 'S', rank: 8, value: 'S8'),
+#     Card.new(suite: 'D', rank: 8, value: 'D8')
+# ]).call()
+#
+# Meld.new(round: self, player: @current_player, cards: [
+#     Card.new(suite: 'H', rank: 2, value: 'H2'),
+#     Card.new(suite: 'S', rank: 2, value: 'S2'),
+#     Card.new(suite: 'D', rank: 2, value: 'D2')
+# ]).call()
+#
+# @current_player.hand << Card.new(suite: 'C', rank: 3, value: 'C3')
+# @current_player.hand << Card.new(suite: 'C', rank: 5, value: 'C5')
