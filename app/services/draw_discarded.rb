@@ -1,17 +1,20 @@
 class DrawDiscarded
+  attr_reader :errors
+
   def initialize(round: nil, player: nil, card: nil)
     @round = round
     @player = player
     @card = card
+    @errors = []
   end
 
   def call
-    #TODO: Move selected player out of round into controllers
     #TODO: Refactor: selected_player_can_play
-    #TODO: Only allowed to take the top card if no melds yet
-    #TODO: Check selected == current
 
-    #round.selected_player.hand.concat(round.discard.sweep_from(params[:draw]))
+    if @player.melds.length == 0 && @round.discard.cards_from(@card).length > 1
+      @errors << 'You cannot draw more than one card from the discard pile until you have created a meld'
+      return false
+    end
 
     cards = @round.discard.sweep_from(@card)
 

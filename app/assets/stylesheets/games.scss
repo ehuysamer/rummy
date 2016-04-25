@@ -199,3 +199,14 @@
   &._joker2 { background: $cards (-$X1*1px) (-$Y4*1px); }
   &._back { background: $cards (-$X2*1px) (-$Y4*1px); }
 }
+
+.notification
+{
+  position: absolute;
+  top:0px;
+  left:0px;
+  right:0px;
+  padding: 10px 10px;
+  background-color: rgba(140, 0, 0, 0.75);
+  color: white;
+}

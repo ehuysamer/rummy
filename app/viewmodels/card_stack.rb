@@ -141,9 +141,13 @@ class CardStack
     card_found
   end
 
-  def sweep_from(id)
+  def cards_from(id)
     position = @cards.find_index{ |card| card.id == id }
-    returned = @cards.last(@cards.length - position)
+    @cards.last(@cards.length - position)
+  end
+
+  def sweep_from(id)
+    returned = cards_from(id)
     @cards -= returned
     cards.each{|card| card.chosen = false}
     returned
