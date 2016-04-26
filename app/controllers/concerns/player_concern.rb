@@ -1,16 +1,9 @@
 module PlayerConcern
   extend ActiveSupport::Concern
 
-  attr_reader :notifications
-
   included do
-    before_action :have_notifications
     before_action :game_from_parameters
     before_action :player_from_parameters, except: [:index, :new]
-  end
-
-  def have_notifications
-    @notifications = Notifications.new
   end
 
   def game_from_parameters

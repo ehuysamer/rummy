@@ -18,6 +18,8 @@ class Round
       6 => 6
   }
 
+  #TODO: round.save ; round.undo
+
   #TODO: stack.score
 
   def initialize(num_players)
@@ -65,43 +67,36 @@ class Round
     @selected_player = player
   end
 
-  # def find_card_stack(suite: nil, rank: nil, id: nil) #TODO: , card: nil)
-  #   result = pickup if pickup.find(id: id, rank: rank, suite: suite)
-  #   result = discard if !result && discard.find(id: id, rank: rank, suite: suite)
-  #   melds.each{|meld| result = meld if !result && meld.find(id: id, rank: rank, suite: suite) }
-  #   players.each{|player| result = player.hand if !result && player.hand.find(id: id, rank: rank, suite: suite)
-  #
-  #   result
-  # end
-
   def find_meld(cards)
     melds.find { |meld| meld.can_meld(cards) }
   end
 
   def find_card(suite: nil, rank: nil, id: nil)
-    pickup.find(id: id, rank: rank, suite: suite) ||
-        discard.find(id: id, rank: rank, suite: suite) ||
-        (melds.select{|meld| meld.find(id: id, rank: rank, suite: suite) }.first&.find(id: id, rank: rank, suite: suite)) ||
-        (players.select{|player| player.hand.find(id: id, rank: rank, suite: suite) }.first&.hand&.find(id: id, rank: rank, suite: suite))
+    find_stack(suite: suite, rank: rank, id: id)&.
+        find(id: id, rank: rank, suite: suite)
   end
 
   def find_cards_by_id(ids)
     ids.map { |id| find_card(id: id) }
   end
 
-  def replace_card(id: nil, rank: nil, suite: nil, card: nil)
-    pickup.replace_by_id(id: id, rank: rank, suite: suite, card: card) ||
-        discard.replace_by_id(id: id, rank: rank, suite: suite, card: card) ||
-        (melds.select{|meld| meld.find(id: id, rank: rank, suite: suite) }.first&.replace_by_id(id: id, rank: rank, suite: suite, card: card)) ||
-        (players.select{|player| player.hand.find(id: id, rank: rank, suite: suite) }.first&.hand&.replace_by_id(id: id, rank: rank, suite: suite, card: card))
+  def replace_card(id: nil, rank: nil, suite: nil, replace_with_card: nil)
+    find_stack(suite: suite, rank: rank, id: id)&.
+        replace_card(id: id, rank: rank, suite: suite, replace_with_card: replace_with_card)
   end
 
   #TODO: , card:nil
   def steal_card(suite: nil, rank: nil, id: nil)
-    pickup.remove_by_id(id: id, rank: rank, suite: suite) ||
-        discard.remove_by_id(id: id, rank: rank, suite: suite) ||
-        (melds.select{|meld| meld.find(id: id, rank: rank, suite: suite) }.first&.remove_by_id(id: id, rank: rank, suite: suite)) ||
-        (players.select{|player| player.hand.find(id: id, rank: rank, suite: suite) }.first&.hand&.remove_by_id(id: id, rank: rank, suite: suite))
+    find_stack(suite: suite, rank: rank, id: id)&.
+        remove_card(id: id, rank: rank, suite: suite)
+  end
+
+  def find_stack(suite: nil, rank: nil, id: nil)
+    return pickup if pickup.find(id: id, rank: rank, suite: suite)
+    return discard if discard.find(id: id, rank: rank, suite: suite)
+
+    (melds.select{|meld| meld.find(id: id, rank: rank, suite: suite) }&.first) ||
+      (players.select{|player| player.hand.find(id: id, rank: rank, suite: suite) }&.first&.hand)
   end
 
   def player_id(player)
@@ -201,3 +196,13 @@ end
 #
 # @current_player.hand << Card.new(suite: 'C', rank: 3, value: 'C3')
 # @current_player.hand << Card.new(suite: 'C', rank: 5, value: 'C5')
+
+
+# def find_card_stack(suite: nil, rank: nil, id: nil) #TODO: , card: nil)
+#   result = pickup if pickup.find(id: id, rank: rank, suite: suite)
+#   result = discard if !result && discard.find(id: id, rank: rank, suite: suite)
+#   melds.each{|meld| result = meld if !result && meld.find(id: id, rank: rank, suite: suite) }
+#   players.each{|player| result = player.hand if !result && player.hand.find(id: id, rank: rank, suite: suite)
+#
+#   result
+# end

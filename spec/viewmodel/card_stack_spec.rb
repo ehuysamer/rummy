@@ -164,16 +164,16 @@ RSpec.describe CardStack, type: :class do
     let(:cards) { cards_5_with_joker }
 
     it 'returns the card that was removed' do
-      expect(stack.remove_by_id(id: 'H2').id).to eq 'H2'
+      expect(stack.remove_card(id: 'H2').id).to eq 'H2'
     end
 
     it 'removes the card' do
-      stack.remove_by_id(id: 'H2')
+      stack.remove_card(id: 'H2')
       expect(stack.cards.map{ |card| card.id }).not_to include 'H2'
     end
 
     it 'only removes one card' do
-      stack.remove_by_id(id: 'H2')
+      stack.remove_card(id: 'H2')
       expect(stack.length).to eq 4
     end
   end

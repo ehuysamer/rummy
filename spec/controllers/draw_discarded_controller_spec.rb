@@ -15,6 +15,12 @@ RSpec.describe DrawDiscardedController, type: :controller do
         %w(D2 D3 D4 D5).each { |card| round.players[2].hand << round.steal_card(id: card) }
         %w(D6 D7 D8 D9).each { |card| round.players[3].hand << round.steal_card(id: card) }
 
+        meld_cards = []
+        %w(C2 C3 C4).each { |card| meld_cards << round.steal_card(id: card) }
+        meld = round.find_meld(meld_cards)
+        meld.concat(meld_cards)
+        meld.owner = round.players[0]
+
         round.select_player(round.players[0])
       end
 

@@ -122,20 +122,22 @@ class CardStack
 
   def find(id: nil, rank: nil, suite: nil)
     @cards.compact.find{ |card| (id.nil? || card.id == id) && (rank.nil? || card.rank == rank) && (suite.nil? || card.suite == suite)}
+  rescue
+    byebug
   end
 
-  def remove_by_id(id: nil, rank: nil, suite: nil)
+  def remove_card(id: nil, rank: nil, suite: nil)
     card_found = find(id: id, rank: rank, suite: suite)
     @cards.reject!{ |card| card.compare_id_to(card_found) } if card_found
     card_found
   end
 
-  def replace_by_id(id: nil, rank: nil, suite: nil, card: nil)
+  def replace_card(id: nil, rank: nil, suite: nil, replace_with_card: nil)
     card_found = find(id: id, rank: rank, suite: suite)
 
     if card_found
       @cards.reject!{ |c| c.compare_id_to(card_found) }
-      @cards << card
+      @cards << replace_with_card
     end
 
     card_found

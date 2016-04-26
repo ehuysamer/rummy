@@ -16,7 +16,7 @@ class JokerGrab
       joker_card.chosen = false
       joker_card.rank = nil
       joker_card.suite = nil
-      hand << @round.replace_card(id: 'joker', card: card)
+      hand << @round.replace_card(id: 'joker', replace_with_card: card)
       return true
     end
 
@@ -25,7 +25,7 @@ class JokerGrab
       joker_card.chosen = false
       joker_card.rank = nil
       joker_card.suite = nil
-      hand << @round.replace_card(id: 'joker2', card: card)
+      hand << @round.replace_card(id: 'joker2', replace_with_card: card)
       return true
     end
 

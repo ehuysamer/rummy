@@ -15,6 +15,7 @@ RSpec.describe DrawDiscarded, type: :class do
   end
 
   before do
+    round.melds[0].owner = player
     DrawDiscarded.new(round: round, player: player, card: from).call
   end
 

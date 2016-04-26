@@ -18,7 +18,7 @@ class Discard
     @player.hand.cards.each {|card| card.chosen = false}
 
     @player.has_drawn_card = false
-    @round.discard << @player.hand.remove_by_id(id: @card_id)
+    @round.discard << @player.hand.remove_card(id: @card_id)
     
     true
   end
