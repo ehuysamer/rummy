@@ -15,11 +15,19 @@ class MeldController < ApplicationController
     joker1 = params[:joker1]
     joker2 = params[:joker2]
     if joker1 || joker2
-      JokerImpersonate.new(@round, @player, joker1, joker2).call
+      joker_impersonate = JokerImpersonate.new(@round, @player, joker1, joker2)
+      if !joker_impersonate.call
+        flash[:notice] = joker_impersonate.errors.join('<br/>')
+        redirect_to_current_round
+        return
+      end
     end
 
-    Meld.new(round: @round, player: @player, cards: selected).call
+    meld_service = Meld.new(round: @round, player: @player, cards: selected)
+    if !meld_service.call
+      flash[:notice] = meld_service.errors.join('<br/>')
+    end
 
-    redirect_to url_for(:controller => :players, :action => :show, :id => @round.current_player_id, :game_id => @game_id)
+    redirect_to_current_round
   end
 end

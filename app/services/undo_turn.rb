@@ -4,7 +4,10 @@ class UndoTurn
   end
 
   def call
-    @round.undo
+    if @round.can_undo?
+      @round.undo
+      true
+    end
   end
 
   private

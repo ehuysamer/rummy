@@ -11,30 +11,34 @@ class Meld
   def call
     meld = round.find_meld(cards)
 
-    unless meld.nil?
-      if meld.cards.length == 0
-        meld.owner = player
-        player.melds << meld
-      end
+    if cards.detect { |card| card.joker && (card.suite.nil? || card.rank.nil?) }
+      @errors << 'You must set the rank and suite for the joker(s) that you want to meld'
+      return false
+    end
 
-      if cards.detect { |card| card.joker && (card.suite.nil? || card.rank.nil?) }
-        @errors << "You must set the rank and suite for the joker(s) that you want to meld"
-        return false
-      end
+    if meld.nil?
+      @errors << 'You are attempting to create a meld that is invalid'
+      return false
+    end
 
-      meld.concat(cards)
-      player.hand.remove_cards(cards)
-      cards.each do |card|
-        card.owner = player
+    if meld.cards.length == 0
+      meld.owner = player
+      player.melds << meld
+    end
 
-        if player.card_must_use_id == card.id
-          player.card_must_use(nil)
-        end
-      end
+    player.hand.remove_cards(cards)
+    meld.concat(cards)
 
-      if player.won?
-        @round.next_player
+    cards.each do |card|
+      card.owner = player
+
+      if player.card_must_use_id == card.id
+        player.card_must_use(nil)
       end
+    end
+
+    if player.won?
+      @round.next_player
     end
 
     true

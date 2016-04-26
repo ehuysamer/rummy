@@ -4,8 +4,14 @@ class DrawController < ApplicationController
   def create
     #NOTE: We don't allow undo if the player drew from the pickup stack (prevent cheating)
 
-    Draw.new(@player, @round).call
+    can_play_service = CanPlay.new(round: @round, player: @player)
 
-    redirect_to url_for(:controller => :players, :action => :show, :id => @round.current_player_id, :game_id => @game_id)
+    if can_play_service.call
+      Draw.new(@player, @round).call
+    else
+      flash[:notice] = @player.errors.join('<br/>')
+    end
+
+    redirect_to_current_round
   end
 end

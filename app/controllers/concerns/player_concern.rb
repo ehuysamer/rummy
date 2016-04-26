@@ -22,6 +22,10 @@ module PlayerConcern
     player_params[:player_id]
   end
 
+  def redirect_to_current_round
+    redirect_to url_for(:controller => :players, :action => :show, :id => @round.current_player_id, :game_id => @game_id)
+  end
+
   private
 
   def player_params
