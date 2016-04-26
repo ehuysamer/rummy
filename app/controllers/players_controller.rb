@@ -5,6 +5,8 @@ class PlayersController < ApplicationController
     redirect_to url_for(:controller => :players, :action => :show, :id => @round.player_id(@round.current_player), :game_id => @game_id)
   end
 
+  #TODO: Don't put cards ids into html if cards' backs are turned
+
   def show
     @pickup = @round.pickup
     @discard = @round.discard

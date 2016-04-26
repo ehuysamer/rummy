@@ -34,8 +34,12 @@ class Player
 
   def score_on_table
     @round.melds.compact.reduce(0) do |sum_melds, meld|
-      sum_melds += meld.cards.compact.reduce(0) do |sum, card|
-        sum += card.score if card.owner == self
+      sum_melds + meld.cards.compact.reduce(0) do |sum, card|
+        if card.owner == self
+          sum + card.score if card.owner == self
+        else
+          sum
+        end
       end
     end
   end

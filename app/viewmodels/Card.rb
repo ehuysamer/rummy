@@ -27,8 +27,8 @@ class Card
     #TODO: #TEST: Score
     # Score is the impersonated score (outside the hand); or 50 if its inside the hand (no score)
     result = rank || 0
+    result = 50 if joker && !rank
     result = 10 if rank && rank > 10
-    result = 50 if joker
     result
   end
 
