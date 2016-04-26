@@ -1,5 +1,5 @@
 class JokerGrab
-  def initialize(round, player, card_submitted)
+  def initialize(round: nil, player: nil, card_submitted: nil, joker_id: nil)
     @round = round
     @player = player
     @card_submitted = card_submitted

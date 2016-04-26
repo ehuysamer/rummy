@@ -97,8 +97,8 @@ class Round
     return pickup if pickup.find(id: id, rank: rank, suite: suite)
     return discard if discard.find(id: id, rank: rank, suite: suite)
 
-    (melds.select{|meld| meld.find(id: id, rank: rank, suite: suite) }&.first) ||
-      (players.select{|player| player.hand.find(id: id, rank: rank, suite: suite) }&.first&.hand)
+    (melds.detect{|meld| meld.find(id: id, rank: rank, suite: suite) }) ||
+      (players.detect{|player| player.hand.find(id: id, rank: rank, suite: suite) }&.hand)
   end
 
   def player_id(player)

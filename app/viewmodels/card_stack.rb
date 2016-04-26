@@ -88,7 +88,7 @@ class CardStack
   end
 
   def add_all
-    %w(H C D S).each do |suite|
+    Card::SUITES.each do |suite|
       (1..13).to_a.each do |rank|
         @cards << Card.new(suite: suite, rank: rank, id: Card.suite_rank_to_id(suite, rank), joker: false)
       end

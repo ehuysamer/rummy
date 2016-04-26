@@ -1,14 +1,13 @@
 class Card
+  attr_reader :id
+
   #TODO: Change to attr_reader; all except 'owner'
   attr_accessor :chosen
   attr_accessor :back
-  attr_accessor :id
   attr_accessor :suite
   attr_accessor :rank
   attr_accessor :owner
   attr_accessor :joker
-
-  #TODO: #REFACTOR: Change 'value' to 'id'
 
   def initialize(id: '', suite: nil, rank: nil, back: false, chosen: false, owner: nil, joker: false)
     @id = id
@@ -20,16 +19,26 @@ class Card
     @joker = joker
   end
 
+  SPADES = 'S'
+  HEARTS = 'H'
+  CLUBS = 'C'
+  DIAMONDS = 'D'
+
   RANKS = %w(A 2 3 4 5 6 7 8 9 10 J Q K)
   SUITES = %w(S H C D)
 
+  JOKER = %w(joker joker2)
+
   def score
-    #TODO: #TEST: Score
     # Score is the impersonated score (outside the hand); or 50 if its inside the hand (no score)
-    result = rank || 0
-    result = 50 if joker && !rank
-    result = 10 if rank && rank > 10
-    result
+
+    if joker && !rank
+      50
+    elsif rank && rank > 10
+      10
+    else
+      rank || 0
+    end
   end
 
   def self.rank_to_name(rank)
@@ -115,4 +124,9 @@ class Card
   def compare_rank_suite_to(other)
     rank == other.rank && suite == other.suite
   end
+
+  def to_s
+    id
+  end
+
 end
