@@ -122,8 +122,6 @@ class CardStack
 
   def find(id: nil, rank: nil, suite: nil)
     @cards.compact.find{ |card| (id.nil? || card.id == id) && (rank.nil? || card.rank == rank) && (suite.nil? || card.suite == suite)}
-  rescue
-    byebug
   end
 
   def remove_card(id: nil, rank: nil, suite: nil)

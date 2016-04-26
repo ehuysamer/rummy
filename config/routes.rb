@@ -17,6 +17,7 @@ Rails.application.routes.draw do
       resources :draw_discarded, only: [:create]
       resources :meld, only: [:create]
       resources :joker_grab, only: [:create]
+      resources :undo, only: [:create]
       resources :summon, only: [:create]
     end
     resources :reset

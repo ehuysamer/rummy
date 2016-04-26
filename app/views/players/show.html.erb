@@ -108,6 +108,18 @@
     <% end # form %>
   <% end %>
 
+  <% if @round.can_play_hand? && @round.can_undo? %>
+      <div style="font-size:16px; font-weight: bold">Undo</div>
+      <%= form_tag(:controller => :undo, :action => :create, :player_id => @player_id) do %>
+          <%= button_tag(
+                  type: 'submit',
+                  name: 'undo',
+                  value: 'undo') do %>
+              Undo
+          <% end %>
+      <% end # form %>
+  <% end %>
+
 <% if @round.can_play_hand? %>
   <div style="font-size:16px; font-weight: bold">Joker replacement</div>
     <%= form_tag(:controller => :joker_grab, :action => :create, :player_id => @player_id) do %>

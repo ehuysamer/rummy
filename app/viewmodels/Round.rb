@@ -33,6 +33,8 @@ class Round
       Player.new(index, 'Player ' + (index + 1).to_s, hand, self)
     end
 
+    @saved_state = nil
+
     @current_player = @players[0]
 
     @melds = []
@@ -108,6 +110,7 @@ class Round
   end
 
   def next_player
+    clear_undo
     index = player_id(@current_player)
     index = (index + 1) % players.length
     @current_player = players[index]
@@ -131,6 +134,24 @@ class Round
     @@round ||= Round.new(num_players).shuffle.deal
   end
 
+  def save
+    clear_undo
+    @saved_state = Marshal.load(Marshal.dump(self))
+  end
+
+  def undo
+    @@round = @saved_state
+  end
+
+  def clear_undo
+    @saved_state = nil
+  end
+
+  def can_undo?
+    !@saved_state.nil?
+  end
+
+  attr_reader :saved_state
   private
 
   attr_reader :selected_player
