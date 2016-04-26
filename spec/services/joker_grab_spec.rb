@@ -75,7 +75,8 @@ RSpec.describe JokerGrab, type: :class do
   context 'grabs the joker' do
     before do
       round.current_player = player2
-      JokerGrab.new(round: round, player: player2, joker_id: card_to_grab).call
+      JokerGrab.new(round: round, player: player2, card_submitted: card_to_grab, joker_id: 'joker').call
+      JokerGrab.new(round: round, player: player2, card_submitted: card_to_grab, joker_id: 'joker2').call
     end
 
     context 'Other player has melded with jokers owned by current player' do
