@@ -24,6 +24,9 @@ class Meld
     if meld.cards.length == 0
       meld.owner = player
       player.melds << meld
+    elsif player.melds.length == 0
+      @errors << "You can't attach cards until you've created a meld"
+      return false
     end
 
     player.hand.remove_cards(cards)

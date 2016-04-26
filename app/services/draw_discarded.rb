@@ -9,8 +9,6 @@ class DrawDiscarded
   end
 
   def call
-    #TODO: Refactor: selected_player_can_play
-
     if @player.melds.length == 0 && @round.discard.cards_from(@card).length > 1
       @errors << 'You cannot draw more than one card from the discard pile until you have created a meld'
       return false
