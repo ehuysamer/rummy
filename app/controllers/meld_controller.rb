@@ -11,9 +11,18 @@ class MeldController < ApplicationController
     selected = @player.hand.select(selection_submitted)
 
     joker1 = params[:joker1]
+    if joker1
+      joker_impersonate = JokerImpersonate.new(round: @round, player: @player, joker_id: 'joker', value: joker1)
+      if !joker_impersonate.call
+        flash[:notice] = joker_impersonate.errors.join('<br/>')
+        redirect_to_current_round
+        return
+      end
+    end
+
     joker2 = params[:joker2]
-    if joker1 || joker2
-      joker_impersonate = JokerImpersonate.new(@round, @player, joker1, joker2)
+    if joker2
+      joker_impersonate = JokerImpersonate.new(round: @round, player: @player, joker_id: 'joker2', value: joker2)
       if !joker_impersonate.call
         flash[:notice] = joker_impersonate.errors.join('<br/>')
         redirect_to_current_round

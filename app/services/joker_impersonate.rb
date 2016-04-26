@@ -1,33 +1,21 @@
 class JokerImpersonate
   attr_reader :errors
 
-  def initialize(round, player, joker1, joker2)
+  def initialize(round: nil, player: nil, joker_id: nil, value: nil)
     @round = round
     @player = player
-    @joker1 = joker1
-    @joker2 = joker2
+    @joker_id = joker_id
+    @value = value
     @errors = []
   end
 
   def call
-    if @joker1
-      if (card = player.hand.find(id: 'joker'))
-        card.rank = Card.rank_by_id(@joker1)
-        card.suite = Card.suite_by_id(@joker1)
-      else
-        @errors << "You cannot set the replacement card for a joker that you don't own"
-        return false
-      end
-    end
-
-    if @joker2
-      if (card = player.hand.find(id: 'joker2'))
-        card.rank = Card.rank_by_id(@joker2)
-        card.suite = Card.suite_by_id(@joker2)
-      else
-        @errors << "You cannot set the replacement card for a joker that you don't own"
-        return false
-      end
+    if (card = player.hand.find(id: joker_id))
+      card.rank = Card.rank_by_id(@value)
+      card.suite = Card.suite_by_id(@value)
+    else
+      @errors << "You cannot set the replacement card for a joker that you don't own"
+      return false
     end
 
     true
@@ -35,5 +23,5 @@ class JokerImpersonate
 
   private
 
-  attr_reader :player, :joker1, :joker2, :round
+  attr_reader :player, :joker_id, :value
 end

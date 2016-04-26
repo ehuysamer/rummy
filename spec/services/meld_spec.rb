@@ -20,8 +20,12 @@ RSpec.describe Meld, type: :class do
   before do
     cards.each { |val| round.current_player.hand << round.steal_card(id: val) }
 
-    if joker1 || joker2
-      JokerImpersonate.new(round, player, joker1, joker2).call
+    if joker1
+      JokerImpersonate.new(round: round, player: player, joker_id: 'joker', value: joker1).call
+    end
+
+    if joker2
+      JokerImpersonate.new(round: round, player: player, joker_id: 'joker2', value: joker2).call
     end
 
     Meld.new(round: round, player: player, cards: %w(C2 C3 C4).map{|card| round.find_card(id: card)}).call

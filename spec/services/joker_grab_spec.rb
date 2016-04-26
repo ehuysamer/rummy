@@ -26,7 +26,8 @@ RSpec.describe JokerGrab, type: :class do
 
     #byebug
 
-    JokerImpersonate.new(round, player1, 'HA', 'DA').call
+    JokerImpersonate.new(round: round, player: player1, joker_id: 'joker', value: 'HA').call
+    JokerImpersonate.new(round: round, player: player1, joker_id: 'joker2', value: 'DA').call
     Meld.new(round: round, player: player1, cards: player1.hand.select(card_ids_to_meld)).call
 
     #byebug

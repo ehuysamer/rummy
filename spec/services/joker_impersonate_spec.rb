@@ -22,7 +22,10 @@ RSpec.describe Discard, type: :class do
     round
   end
 
-  let!(:result) { JokerImpersonate.new(round, round.current_player, joker1_id, joker2_id).call }
+  let!(:result) {
+      JokerImpersonate.new(round: round, player: round.current_player, joker_id: 'joker', value: joker1_id).call &&
+        JokerImpersonate.new(round: round, player: round.current_player, joker_id: 'joker2', value: joker2_id).call
+  }
 
   context 'user sets value of jokers' do
     it 'Returns true' do
