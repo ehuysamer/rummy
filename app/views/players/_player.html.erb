@@ -5,7 +5,7 @@
   <div><%= player.name %></div>
 
   <div><%= player.won? ? 'WON' : '' %></div>
-  <% if round.current_player.id == @player_id || round.player_won %>
+  <% if round.current_player.id == player.id %>
   <div>Score: <%= player.score %></div>
   <% end %>
 

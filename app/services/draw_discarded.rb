@@ -16,6 +16,8 @@ class DrawDiscarded
       return false
     end
 
+    player.card_must_use(@card)
+
     cards = @round.discard.sweep_from(@card)
 
     cards.each{ |card| card.chosen = true }

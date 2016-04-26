@@ -1,8 +1,11 @@
 class Meld
+  attr_reader :errors
+
   def initialize(round: nil, player: nil, cards: nil)
     @round = round
     @player = player
     @cards = cards
+    @errors = []
   end
 
   def call
@@ -11,16 +14,23 @@ class Meld
     unless meld.nil?
       if meld.cards.length == 0
         meld.owner = player
-
-        #TODO: Remove melds object from player
         player.melds << meld
       end
 
-      #TODO: Prevent melding with jokers if values not properly set
+      if cards.detect { |card| card.joker && (card.suite.nil? || card.rank.nil?) }
+        @errors << "You must set the rank and suite for the joker(s) that you want to meld"
+        return false
+      end
 
       meld.concat(cards)
       player.hand.remove_cards(cards)
-      cards.each {|card| card.owner = player}
+      cards.each do |card|
+        card.owner = player
+
+        if player.card_must_use_id == card.id
+          player.card_must_use(nil)
+        end
+      end
 
       if player.won?
         @round.next_player

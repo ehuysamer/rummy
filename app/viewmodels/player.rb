@@ -8,16 +8,16 @@ class Player
   attr_accessor :has_drawn_card
   attr_accessor :card_must_use
 
-  #TODO: card_must_use
+  attr_accessor :card_must_use_id
 
   def initialize(id, name, hand, round)
     @id = id
     @name = name
     @hand = hand
-    @melds = []
     @has_drawn_card = false
-    @card_must_use = false
     @round = round
+
+    card_must_use nil
   end
 
   def won?
@@ -26,6 +26,10 @@ class Player
 
   def melds
     round.melds.select{|meld| meld.owner == self}
+  end
+
+  def card_must_use(id)
+    @card_must_use_id = id
   end
 
   def score_in_hand
