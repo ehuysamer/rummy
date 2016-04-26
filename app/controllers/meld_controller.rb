@@ -3,13 +3,11 @@ class MeldController < ApplicationController
 
   def create
     #TODO: Figure out why the weird data getting passed in from the view form
-
     cards = params[:cards]
-
     #selected = cards.select{|k,v|v.length>1}.map{|k,v| k}
     #selected = round.selected_player.hand.select(cards&.map {|k,v| k})
-
     selection_submitted = cards.select{|k,v|v.length>1}.map{|k,v| k}
+
     selected = @player.hand.select(selection_submitted)
 
     joker1 = params[:joker1]
