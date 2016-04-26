@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       resources :undo, only: [:create]
       resources :summon, only: [:create]
     end
+    resources :next_round, only: [:create]
     resources :reset
   end
 

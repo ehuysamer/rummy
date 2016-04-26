@@ -1,12 +1,12 @@
 <div class="zone pickup">
-  <%= render partial: 'stack', locals: {position: Position.new(left: 5, top: 5), card_stack: @pickup, spacing_x: 0.5, spacing_y: 0.5, back: true, selectable: @round.can_draw?, sorted: false } %>
-  <%= render partial: 'stack', locals: {position: Position.new(left: 120, top: 15), card_stack: @discard, spacing_x: 12, spacing_y: 0, back: false, selectable: @round.can_draw?, sorted: false } %>
+  <%= render partial: 'stack', locals: {position: Position.new(left: 5, top: 5), card_stack: @pickup, spacing_x: 0.5, spacing_y: 0.5, back: true, selectable: @round.can_draw?, sort_by: nil } %>
+  <%= render partial: 'stack', locals: {position: Position.new(left: 120, top: 15), card_stack: @discard, spacing_x: 12, spacing_y: 0, back: false, selectable: @round.can_draw?, sort_by: nil } %>
 </div>
 
 <div class="zone players">
   <% @players.select{ |player| player != @player }.each.with_index do |player, index| %>
     <%= render partial: 'player', locals: { position: Position.new(left: 10, top: 10 + index * 130), player: player, round: @round } %>
-    <%= render partial: 'stack', locals: { position: Position.new(left: 100, top: 10 + index * 130), card_stack: player.hand, spacing_x: 12, spacing_y: 0, back: true, selectable: false, sorted: true } %>
+    <%= render partial: 'stack', locals: { position: Position.new(left: 100, top: 10 + index * 130), card_stack: player.hand, spacing_x: 12, spacing_y: 0, back: true, selectable: false, sort_by: :suite } %>
     <%= render partial: 'melds', locals: { position: Position.new(left: player.hand.length * 24 + 10 + 90, top: 10 + index * 130), round: @round, player: player, selectable: false } %>
   <% end %>
   <div style="position:absolute; left: 0; top: <%= (@players.length - 1) * 130 %>px">&nbsp;</div>
@@ -14,148 +14,167 @@
 
 <div class="zone user">
   <%= render partial: 'player', locals: { position: Position.new(left: 10, bottom: 10), player: @player, round: @round } %>
-  <%= render partial: 'stack', locals: { position: Position.new(left: 100, top: 20), card_stack: @player.hand, spacing_x: 12, spacing_y: 0, back: false, selectable: (@player == @round.current_player && @player.has_drawn_card), sorted: true } %>
+  <%= render partial: 'stack', locals: { position: Position.new(left: 100, top: 20), card_stack: @player.hand, spacing_x: 12, spacing_y: 0, back: false, selectable: (@player == @round.current_player_turn && @player.has_drawn_card), sort_by: @player.sort_by } %>
   <%= render partial: 'melds', locals: { position: Position.new(left: 100 + @player.hand.length * 12 + 10 + 90, top: 20), round: @round, player: @player } %>
 </div>
 
-<div style="position: absolute; top: 0px; right: 20px; width: 200px; height: 400px; background-color: rgba(0, 100, 0, 0.5); overflow: auto; padding: 10px; margin-top: 20px">
+<% if @player == @round.current_player_turn %>
 
-  <% if @round.can_play_hand? %>
+  <div style="position: absolute; top: 0px; right: 20px; width: 200px; height: 400px; background-color: rgba(0, 100, 0, 0.5); overflow: auto; padding: 10px; margin-top: 20px">
 
-    <div style="font-size:16px; font-weight: bold">Discard</div>
+    <% if @round.player_won %>
+        <div style="font-size:16px; font-weight: bold">Next round</div>
 
-      <%= form_tag(:controller => :discard, :action => :create, :player_id => @player_id) do %>
-        <% @player.hand.sorted.each do |card| %>
+        <%= form_tag(:controller => :next_round, :action => :create) do %>
             <%= button_tag(
                     type: 'submit',
-                    name: 'discard',
-                    value: card.id) do %>
-                <%= raw card_button_text(card, true) %>
+                    name: 'next_round',
+                    value: 'next_round') do %>
+
+                Next round
             <% end %>
-        <% end %>
-    <% end # form %>
-  <% end %>
+        <% end # form %>
+    <% end %>
 
-  <% if @round.can_play_hand? %>
+    <% if @round.can_play_hand? %>
 
-    <div style="font-size:16px; font-weight: bold">Meld</div>
+      <div style="font-size:16px; font-weight: bold">Discard</div>
 
-    <%= form_tag(:controller => :meld, :action => :create, :player_id => @player_id) do %>
-
-      <% @player.hand.sorted.each do |card| %>
-          <%#= check_box('cards', card.value, {:multiple => true}, card.value) %>
-          <span style="padding: 0px 3px">
-          <%= check_box('cards', card.id, {:multiple => true, checked: !!card.chosen}, card.id) %>
-          <%= raw card_button_text(card, true) %>
-          </span>
-      <% end %>
-
-      <div>
-        <%= button_tag(
-          type: 'submit',
-          name: 'meld',
-          value: 'meld') do %>
-            Meld
-        <% end %>
-      </div>
-
-      <% if @player.hand.find(id: 'joker') %>
-        <div>Joker 1: <%= text_field_tag 'joker1' %></div>
-      <% end %>
-      <% if @player.hand.find(id: 'joker2') %>
-        <div>Joker 2: <%= text_field_tag 'joker2' %></div>
-      <% end %>
-
-    <% end # form %>
-  <% end %>
-
-  <% if @round.can_draw? %>
-    <div style="font-size:16px; font-weight: bold">Draw</div>
-    <%= form_tag(:controller => :draw, :action => :create, :player_id => @player_id) do %>
-        <%= button_tag(
-              type: 'submit',
-              name: 'pickup',
-              value: 'pickup') do %>
-            Draw
-          <% end %>
-    <% end # form %>
-  <% end %>
-
-  <% if @round.can_draw? %>
-    <div style="font-size:16px; font-weight: bold">Sweep</div>
-    <%= form_tag(:controller => :draw_discarded, :action => :create, :player_id => @player_id) do %>
-      <% @discard.sorted.compact.each do |card| %>
-          <%= button_tag(
-                  type: 'submit',
-                  name: 'draw',
-                  value: card.id) do %>
+        <%= form_tag(:controller => :discard, :action => :create, :player_id => @player_id) do %>
+          <% @player.hand.sorted.each do |card| %>
+              <%= button_tag(
+                      type: 'submit',
+                      name: 'discard',
+                      value: card.id) do %>
                   <%= raw card_button_text(card, true) %>
+              <% end %>
           <% end %>
-        <% end %>
-    <% end # form %>
-  <% end %>
+      <% end # form %>
+    <% end %>
 
-  <% if false %>
-    <div style="font-size:16px; font-weight: bold">Summon</div>
-    <%= form_tag(:controller => :summon, :action => :create, :player_id => @player_id) do %>
-        <%= text_field_tag 'card' %>
-        <%= button_tag(
+    <% if @round.can_play_hand? %>
+
+      <div style="font-size:16px; font-weight: bold">Meld</div>
+
+      <%= form_tag(:controller => :meld, :action => :create, :player_id => @player_id) do %>
+
+        <% @player.hand.sorted.each do |card| %>
+            <%#= check_box('cards', card.value, {:multiple => true}, card.value) %>
+            <span style="padding: 0px 3px">
+            <%= check_box('cards', card.id, {:multiple => true, checked: !!card.chosen}, card.id) %>
+            <%= raw card_button_text(card, true) %>
+            </span>
+        <% end %>
+
+        <div>
+          <%= button_tag(
+            type: 'submit',
+            name: 'meld',
+            value: 'meld') do %>
+              Meld
+          <% end %>
+        </div>
+
+        <% if @player.hand.find(id: 'joker') %>
+          <div>Joker 1: <%= text_field_tag 'joker1' %></div>
+        <% end %>
+        <% if @player.hand.find(id: 'joker2') %>
+          <div>Joker 2: <%= text_field_tag 'joker2' %></div>
+        <% end %>
+
+      <% end # form %>
+    <% end %>
+
+    <% if @round.can_draw? %>
+      <div style="font-size:16px; font-weight: bold">Draw</div>
+      <%= form_tag(:controller => :draw, :action => :create, :player_id => @player_id) do %>
+          <%= button_tag(
                 type: 'submit',
                 name: 'pickup',
                 value: 'pickup') do %>
-            Draw
-        <% end %>
-    <% end # form %>
-  <% end %>
+              Draw
+            <% end %>
+      <% end # form %>
+    <% end %>
 
-  <% if @round.can_play_hand? && @round.can_undo? %>
-      <div style="font-size:16px; font-weight: bold">Undo</div>
-      <%= form_tag(:controller => :undo, :action => :create, :player_id => @player_id) do %>
+    <% if @round.can_draw? %>
+      <div style="font-size:16px; font-weight: bold">Sweep</div>
+      <%= form_tag(:controller => :draw_discarded, :action => :create, :player_id => @player_id) do %>
+        <% @discard.sorted.compact.each do |card| %>
+            <%= button_tag(
+                    type: 'submit',
+                    name: 'draw',
+                    value: card.id) do %>
+                    <%= raw card_button_text(card, true) %>
+            <% end %>
+          <% end %>
+      <% end # form %>
+    <% end %>
+
+    <% if false %>
+      <div style="font-size:16px; font-weight: bold">Summon</div>
+      <%= form_tag(:controller => :summon, :action => :create, :player_id => @player_id) do %>
+          <%= text_field_tag 'card' %>
           <%= button_tag(
                   type: 'submit',
-                  name: 'undo',
-                  value: 'undo') do %>
-              Undo
+                  name: 'pickup',
+                  value: 'pickup') do %>
+              Draw
           <% end %>
+      <% end # form %>
+    <% end %>
+
+    <% if @round.can_play_hand? && @round.can_undo? %>
+        <div style="font-size:16px; font-weight: bold">Undo</div>
+        <%= form_tag(:controller => :undo, :action => :create, :player_id => @player_id) do %>
+            <%= button_tag(
+                    type: 'submit',
+                    name: 'undo',
+                    value: 'undo') do %>
+                Undo
+            <% end %>
+        <% end # form %>
+    <% end %>
+
+  <% if @round.can_play_hand? %>
+    <div style="font-size:16px; font-weight: bold">Joker replacement</div>
+      <%= form_tag(:controller => :joker_grab, :action => :create, :player_id => @player_id) do %>
+
+        <%
+          joker1 = @round.find_card(id: 'joker')
+          joker2 = @round.find_card(id: 'joker2')
+          #<%= raw card_button_text(card)
+          #<%= raw card_button_text(card)
+        %>
+        <div>Joker 1:
+          <% @player.hand.sorted.compact.each do |card|
+            if joker1.suite == card.suite && joker1.rank == card.rank && !card.joker %>
+                  <%= button_tag(
+                          type: 'submit',
+                          name: 'card',
+                          value: card.id) do %>
+                      <%= raw card_button_text(card, false) %>
+                  <% end %>
+              <% end %>
+          <% end %>
+        </div>
+
+        <div>Joker 2:
+          <% @player.hand.sorted.compact.each do |card|
+            if joker2.suite == card.suite && joker2.rank == card.rank && !card.joker %>
+                  <%= button_tag(
+                          type: 'submit',
+                          name: 'card',
+                          value: card.id) do %>
+                      <%= raw card_button_text(card, false) %>
+                  <% end %>
+              <% end %>
+          <% end %>
+        </div>
       <% end # form %>
   <% end %>
 
-<% if @round.can_play_hand? %>
-  <div style="font-size:16px; font-weight: bold">Joker replacement</div>
-    <%= form_tag(:controller => :joker_grab, :action => :create, :player_id => @player_id) do %>
-
-      <%
-        joker1 = @round.find_card(id: 'joker')
-        joker2 = @round.find_card(id: 'joker2')
-        #<%= raw card_button_text(card)
-        #<%= raw card_button_text(card)
-      %>
-      <div>Joker 1:
-        <% @player.hand.sorted.compact.each do |card|
-          if joker1.suite == card.suite && joker1.rank == card.rank && !card.joker %>
-                <%= button_tag(
-                        type: 'submit',
-                        name: 'card',
-                        value: card.id) do %>
-                    <%= raw card_button_text(card, false) %>
-                <% end %>
-            <% end %>
-        <% end %>
-      </div>
-
-      <div>Joker 2:
-        <% @player.hand.sorted.compact.each do |card|
-          if joker2.suite == card.suite && joker2.rank == card.rank && !card.joker %>
-                <%= button_tag(
-                        type: 'submit',
-                        name: 'card',
-                        value: card.id) do %>
-                    <%= raw card_button_text(card, false) %>
-                <% end %>
-            <% end %>
-        <% end %>
-      </div>
-    <% end # form %>
+  </div>
 <% end %>
 
 </div>

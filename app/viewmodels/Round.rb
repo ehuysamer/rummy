@@ -6,7 +6,7 @@ class Round
   attr_reader :players
 
   #TODO: #REFACTOR: rename -> current_player_turn
-  attr_accessor :current_player
+  attr_accessor :current_player_turn
 
   @@round = nil
 
@@ -17,10 +17,6 @@ class Round
       5 => 6,
       6 => 6
   }
-
-  #TODO: round.save ; round.undo
-
-  #TODO: stack.score
 
   def initialize(num_players)
     @pickup = CardStack.new
@@ -35,19 +31,24 @@ class Round
 
     @saved_state = nil
 
-    @current_player = @players[0]
+    @current_player_turn = @players[0]
 
     @melds = []
     (1..13).each { |rank| @melds << CardStack.new(rank: rank) }
     Card::SUITES.each { |suite| @melds << CardStack.new(suite: suite) }
   end
 
+  def reset_stacks
+    all_stacks.each { |stack| stack.clear }
+    @pickup.add_all
+  end
+
   def can_draw?
-    !player_won && selected_player && !current_player.has_drawn_card && selected_player == current_player
+    !player_won && selected_player && !current_player_turn.has_drawn_card && selected_player == current_player_turn
   end
 
   def can_play_hand?
-    !player_won && selected_player && current_player.has_drawn_card && selected_player == current_player
+    !player_won && selected_player && current_player_turn.has_drawn_card && selected_player == current_player_turn
   end
 
   def shuffle
@@ -93,12 +94,17 @@ class Round
         remove_card(id: id, rank: rank, suite: suite)
   end
 
-  def find_stack(suite: nil, rank: nil, id: nil)
-    return pickup if pickup.find(id: id, rank: rank, suite: suite)
-    return discard if discard.find(id: id, rank: rank, suite: suite)
+  def all_stacks
+    [
+        pickup,
+        discard,
+        melds,
+        players.map { |player| player.hand }
+    ].flatten
+  end
 
-    (melds.detect{|meld| meld.find(id: id, rank: rank, suite: suite) }) ||
-      (players.detect{|player| player.hand.find(id: id, rank: rank, suite: suite) }&.hand)
+  def find_stack(suite: nil, rank: nil, id: nil)
+    all_stacks.detect{|stack| stack.find(id: id, rank: rank, suite: suite)}
   end
 
   def player_id(player)
@@ -106,14 +112,14 @@ class Round
   end
 
   def current_player_id
-    players.index(@current_player)
+    players.index(@current_player_turn)
   end
 
   def next_player
     clear_undo
-    index = player_id(@current_player)
+    index = player_id(@current_player_turn)
     index = (index + 1) % players.length
-    @current_player = players[index]
+    @current_player_turn = players[index]
   end
 
   def player_by_id(id)
@@ -151,9 +157,9 @@ class Round
     !@saved_state.nil?
   end
 
-  attr_reader :saved_state
   private
 
+  attr_reader :saved_state
   attr_reader :selected_player
 end
 

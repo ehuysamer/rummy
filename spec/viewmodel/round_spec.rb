@@ -52,12 +52,12 @@ RSpec.describe Round, type: :class do
 
     it 'changes the current player' do
       result = round.next_player
-      expect(round.current_player).to be result
+      expect(round.current_player_turn).to be result
     end
 
     it 'wraps after the last player' do
       num_players.times { round.next_player }
-      expect(round.current_player).to be round.players[0]
+      expect(round.current_player_turn).to be round.players[0]
     end
   end
 

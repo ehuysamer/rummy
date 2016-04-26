@@ -6,7 +6,7 @@ RSpec.describe JokerGrab, type: :class do
 
   let(:round) { Round.new(4) }
   let(:player1) { round.players[3] }
-  let(:player2) { round.current_player }
+  let(:player2) { round.current_player_turn }
   let(:card_ids_to_meld) { %w(joker joker2 SA) }
   let(:cards_p1) { %w(H2 H3 H4 joker joker2 SA) }
   let(:cards_p2) { %w(HA DA) }
@@ -22,7 +22,7 @@ RSpec.describe JokerGrab, type: :class do
     cards_p2.each { |card| player2.hand << round.steal_card(id: card) }
     round.deal
 
-    round.current_player = player1
+    round.current_player_turn = player1
 
     #byebug
 
@@ -74,7 +74,7 @@ RSpec.describe JokerGrab, type: :class do
 
   context 'grabs the joker' do
     before do
-      round.current_player = player2
+      round.current_player_turn = player2
       JokerGrab.new(round: round, player: player2, card_submitted: card_to_grab, joker_id: 'joker').call
       JokerGrab.new(round: round, player: player2, card_submitted: card_to_grab, joker_id: 'joker2').call
     end

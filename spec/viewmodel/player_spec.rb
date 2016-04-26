@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Player, type: :class do
   let(:round) { Round.new(4) }
-  let(:player) { round.current_player }
+  let(:player) { round.current_player_turn }
 
   it 'references its parent round' do
     round.players.each { |player| expect(player.round).to be round }

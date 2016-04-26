@@ -17,14 +17,14 @@ RSpec.describe Discard, type: :class do
   let(:round) do
     round = Round.new(4)
 
-    cards.each { |val| round.current_player.hand << round.steal_card(id: val) }
+    cards.each { |val| round.current_player_turn.hand << round.steal_card(id: val) }
 
     round
   end
 
   let!(:result) {
-      JokerImpersonate.new(round: round, player: round.current_player, joker_id: 'joker', value: joker1_id).call &&
-        JokerImpersonate.new(round: round, player: round.current_player, joker_id: 'joker2', value: joker2_id).call
+      JokerImpersonate.new(round: round, player: round.current_player_turn, joker_id: 'joker', value: joker1_id).call &&
+        JokerImpersonate.new(round: round, player: round.current_player_turn, joker_id: 'joker2', value: joker2_id).call
   }
 
   context 'user sets value of jokers' do

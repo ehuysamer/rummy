@@ -1,17 +1,5 @@
 module PlayersHelper
 
-  #TODO: move to Card.suite_to_name
-  def suite_symbol(letter)
-    {
-        'S' => ['2660'.hex].pack('U'),
-        'H' => ['2665'.hex].pack('U'),
-        'D' => ['2666'.hex].pack('U'),
-        'C' => ['2663'.hex].pack('U'),
-        nil => '?',
-        '' => '?'
-    }[letter]
-  end
-
   def joker_symbol
     ['1F0DF'.hex].pack('U')
   end
@@ -31,18 +19,21 @@ module PlayersHelper
   def card_button_text(card, show_joker)
     return 'N/A' if card.nil?
 
+    return '<span style="padding: 0; margin: 0; color: ' + suite_color(card) + '">' + card.to_s + '</span>'
+
+
     #TODO: Needs some fixing up
     if card.joker && show_joker
-      joker_symbol
+      Card::JOKER_SYMBOL
     elsif card.suite.nil? || card.rank.nil?
       if card.joker
-        joker_symbol
+        Card::JOKER_SYMBOL
       else
         card.id
       end
     else
       #TODO: Sort this out
-      '<span style="padding: 0; margin: 0; color: ' + suite_color(card) + '">' + suite_symbol(card.suite) + '</span>' + Card.rank_to_name(card.rank)
+      '<span style="padding: 0; margin: 0; color: ' + suite_color(card) + '">' + Card::suite_symbol(card.suite) + Card.rank_to_name(card.rank) + '</span>'
     end
- end
+  end
 end

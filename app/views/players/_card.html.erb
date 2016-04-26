@@ -1,7 +1,7 @@
 <div
-  name="<%= card.id %>"
+  <% unless back %>name="<%= card.id %>"<% end %>
   class="card
-         <%= back == true ? '_back' : ('_' + card.id.downcase) %>
+         <%= back ? '_back' : ('_' + card.id.downcase) %>
          <%= !back && card.chosen ? 'chosen' : '' %>
          <%= selectable ? 'selectable' : '' %>"
   style="top: <%= y %>px; left: <%= x %>px">

@@ -8,7 +8,7 @@ RSpec.describe Draw, type: :class do
   let(:card) { 'joker2' }
   let(:round) { Round.new(4) }
   let(:pickup_size) { round.pickup.cards.length }
-  let!(:result) { Draw.new(round.current_player, round).call }
+  let!(:result) { Draw.new(round.current_player_turn, round).call }
 
   context 'user discards an owned card' do
     it 'Returns true' do
@@ -20,7 +20,7 @@ RSpec.describe Draw, type: :class do
     end
 
     it 'Added card to players hand' do
-      expect(round.current_player.hand.to_ids).to have_all [card]
+      expect(round.current_player_turn.hand.to_ids).to have_all [card]
     end
 
     it 'Still have the rest of the cards on the pickup pile' do

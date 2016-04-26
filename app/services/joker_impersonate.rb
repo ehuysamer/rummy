@@ -11,8 +11,9 @@ class JokerImpersonate
 
   def call
     if (card = player.hand.find(id: joker_id))
-      card.rank = Card.rank_by_id(@value)
-      card.suite = Card.suite_by_id(@value)
+      rank = Card.rank_by_id(@value)
+      suite = Card.suite_by_id(@value)
+      card.impersonate(rank: rank, suite: suite)
     else
       @errors << "You cannot set the replacement card for a joker that you don't own"
       return false

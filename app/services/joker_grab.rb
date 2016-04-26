@@ -10,25 +10,25 @@ class JokerGrab
     hand = @player.hand
 
     card = hand.find(id: @card_submitted)
-    if card.nil?
-      return false
-    end
+    return false unless card
 
-    card.chosen = false
-    hand.remove_cards([card])
-
-    #TODO: Check that the joker is in a meld!
+    joker_stack = @round.find_stack(id: joker_id)
+    return false unless joker_stack&.is_meld?
 
     joker_card = @round.find_card(id: joker_id)
-    if joker_card.rank == card.rank && joker_card.suite == card.suite
-      joker_card.chosen = false
-      joker_card.rank = nil
-      joker_card.suite = nil
-      hand << @round.replace_card(id: joker_id, replace_with_card: card)
-      return true
-    end
+    return false unless joker_card&.rank == card.rank && joker_card&.suite == card.suite
 
-    false
+    card.chosen = false
+    joker_card.chosen = false
+
+    #TODO: stack.move_card(id, target_stack) / swap_card(id, target_stack, id2)
+
+    hand.remove_cards([card])
+    hand << @round.replace_card(id: joker_id, replace_with_card: card)
+
+    joker_card.impersonate(suite: nil, rank: nil)
+
+    true
   end
 
   private

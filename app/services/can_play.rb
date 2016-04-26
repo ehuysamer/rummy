@@ -8,7 +8,7 @@ class CanPlay
   end
 
   def call
-    if player != round.current_player
+    if player != round.current_player_turn
       errors << "It is currently another player's turn"
       return false
     end

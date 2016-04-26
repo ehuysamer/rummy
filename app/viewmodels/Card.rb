@@ -1,13 +1,24 @@
 class Card
   attr_reader :id
+  attr_reader :joker
+  attr_reader :suite
+  attr_reader :rank
 
   #TODO: Change to attr_reader; all except 'owner'
   attr_accessor :chosen
-  attr_accessor :back
-  attr_accessor :suite
-  attr_accessor :rank
   attr_accessor :owner
-  attr_accessor :joker
+
+  SPADES = 'S'
+  HEARTS = 'H'
+  CLUBS = 'C'
+  DIAMONDS = 'D'
+
+  RANKS = %w(A 2 3 4 5 6 7 8 9 10 J Q K)
+  SUITES = [SPADES, HEARTS, CLUBS, DIAMONDS]
+
+  JOKER = %w(joker joker2)
+
+  JOKER_SYMBOL = ['1F0DF'.hex].pack('U')
 
   def initialize(id: '', suite: nil, rank: nil, back: false, chosen: false, owner: nil, joker: false)
     @id = id
@@ -19,15 +30,23 @@ class Card
     @joker = joker
   end
 
-  SPADES = 'S'
-  HEARTS = 'H'
-  CLUBS = 'C'
-  DIAMONDS = 'D'
+  def self.suite_symbol(letter)
+    {
+        SPADES => ['2660'.hex].pack('U'),
+        HEARTS => ['2665'.hex].pack('U'),
+        DIAMONDS => ['2666'.hex].pack('U'),
+        CLUBS => ['2663'.hex].pack('U'),
+        nil => '?',
+        '' => '?'
+    }[letter]
+  end
 
-  RANKS = %w(A 2 3 4 5 6 7 8 9 10 J Q K)
-  SUITES = %w(S H C D)
-
-  JOKER = %w(joker joker2)
+  def impersonate(suite: nil, rank: nil)
+    if joker
+      @suite = suite
+      @rank = rank
+    end
+  end
 
   def score
     # Score is the impersonated score (outside the hand); or 50 if its inside the hand (no score)
@@ -126,7 +145,12 @@ class Card
   end
 
   def to_s
-    id
+    if suite && rank
+      Card::suite_symbol(suite) + Card.rank_to_name(rank)
+    elsif joker
+      JOKER_SYMBOL
+    else
+      card.id
+    end
   end
-
 end

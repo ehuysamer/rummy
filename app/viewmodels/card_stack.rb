@@ -19,6 +19,14 @@ class CardStack
     @cards
   end
 
+  def to_s
+    @cards.compact.map { |card| card.to_s }.join(' ')
+  end
+
+  def to_ids
+    @cards.compact.map { |card| card.id }
+  end
+
   def can_meld(cards_to_check)
     #WRONG: The following will pass because rank.nil? is true if this is a stack for suites
     #cards.all? { |card| card.rank == rank || card.suite == suite || card.value == 'joker' || card.value == 'joker2' }
@@ -26,8 +34,6 @@ class CardStack
     if cards.length == 0 && cards_to_check.length < 3
       return false
     end
-
-    #byebug
 
     if suite
       if cards_to_check.all? { |card| card.suite == suite } #TODO: CHECK: || card.value == 'joker' || card.value == 'joker2' }
@@ -48,7 +54,6 @@ class CardStack
     (rank - 2) % 13 + 1
   end
 
-  #TODO: Impact of jokers
   def self.is_adjacent(card1, card2)
     (card1.rank - card2.rank).abs == 1  || rank_inc(card1.rank) == card2.rank || rank_dec(card1.rank) == card2.rank
   end
@@ -87,6 +92,10 @@ class CardStack
     ranks.length == 0
   end
 
+  def is_meld?
+    rank || suite
+  end
+
   def add_all
     Card::SUITES.each do |suite|
       (1..13).to_a.each do |rank|
@@ -94,8 +103,8 @@ class CardStack
       end
     end
 
-    @cards << Card.new(id: 'joker', joker: true)
-    @cards << Card.new(id: 'joker2', joker: true)
+    @cards << Card.new(id: Card::JOKER[0], joker: true)
+    @cards << Card.new(id: Card::JOKER[1], joker: true)
   end
 
   def sorted(sort_by: :suite)
@@ -118,6 +127,10 @@ class CardStack
 
   def shuffle
     @cards.shuffle!
+  end
+
+  def clear
+    @cards.clear
   end
 
   def find(id: nil, rank: nil, suite: nil)
@@ -167,14 +180,6 @@ class CardStack
 
   def select(ids)
     @cards.compact.select{ |card| ids.include?(card.id) }
-  end
-
-  def to_s
-    to_ids.join(',')
-  end
-
-  def to_ids
-    @cards.compact.map { |card| card.id }
   end
 
   #TODO: IsTop(Card)

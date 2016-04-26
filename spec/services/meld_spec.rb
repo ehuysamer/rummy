@@ -7,7 +7,7 @@ RSpec.describe Meld, type: :class do
   let(:cards) { %w(joker joker2 D2 D3 D4 H4 S4 C2 C3 C4 C5 C6 C7) }
   let(:cards_to_meld) { %w(D4 H4 S4) }
   let(:meld_cards) { cards_to_meld.map{|card| round.find_card(id: card)} }
-  let(:player) { round.current_player }
+  let(:player) { round.current_player_turn }
   let(:hand) { player.hand }
   let(:meld) { round.find_meld(meld_cards) }
   let(:joker1) { }
@@ -18,7 +18,7 @@ RSpec.describe Meld, type: :class do
   let(:result) { Meld.new(round:round, player:player, cards: meld_cards).call }
 
   before do
-    cards.each { |val| round.current_player.hand << round.steal_card(id: val) }
+    cards.each { |val| round.current_player_turn.hand << round.steal_card(id: val) }
 
     if joker1
       JokerImpersonate.new(round: round, player: player, joker_id: 'joker', value: joker1).call

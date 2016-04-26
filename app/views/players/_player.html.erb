@@ -5,11 +5,22 @@
   <div><%= player.name %></div>
 
   <div><%= player.won? ? 'WON' : '' %></div>
-  <% if round.current_player.id == player.id %>
-  <div>Score: <%= player.score %></div>
-  <% end %>
 
-  <% unless round.player_won || round.current_player.id == @player_id %>
-    <div><%= player == round.current_player ? 'PLAYING...' : '' %></div>
+  <div>
+    Score:
+    <%= player.game_score %>
+    <% if player.id == @player_id %>
+        (<%= player.score %>)
+    <% end %>
+  </div>
+
+  <% unless round.player_won || round.current_player_turn.id == @player_id %>
+    <div><%= player == round.current_player_turn ? 'PLAYING...' : '' %></div>
   <% end %>
 </div>
+
+<%#
+    Current turn: @round.current_player_turn
+    Current perspective: @player_id
+    Player being enumerated: player
+%>
