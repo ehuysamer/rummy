@@ -182,5 +182,15 @@ class CardStack
     @cards.compact.select{ |card| ids.include?(card.id) }
   end
 
+  def move_to(id: nil, stack: nil)
+    card = find(id: id)
+    return nil unless card && stack
+
+    remove_cards([card])
+    stack << card
+
+    card
+  end
+
   #TODO: IsTop(Card)
 end
