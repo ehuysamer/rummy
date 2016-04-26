@@ -10,8 +10,6 @@ class JokerImpersonate
   end
 
   def call
-    byebug
-
     if @joker1
       if (card = player.hand.find(id: 'joker'))
         card.rank = Card.rank_by_id(@joker1)
