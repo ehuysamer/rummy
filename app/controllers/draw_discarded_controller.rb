@@ -2,12 +2,13 @@ class DrawDiscardedController < ApplicationController
   include PlayerConcern
 
   def create
+    return unless handle_can_play
+
     SaveState.new(@round).call
 
     draw_discard_service = DrawDiscarded.new(player: @player, round: @round, card: params[:draw])
-    if !draw_discard_service.call
-      flash[:notice] = draw_discard_service.errors.join('<br/>')
-    end
+    draw_discard_service.call
+    show_errors(draw_discard_service.errors)
 
     redirect_to_current_round
   end

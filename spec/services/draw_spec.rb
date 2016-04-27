@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Draw, type: :class do
+RSpec.describe DrawCard, type: :class do
   include CardStackHelpers
   include_context 'stack_samples'
 
@@ -8,7 +8,7 @@ RSpec.describe Draw, type: :class do
   let(:card) { 'joker2' }
   let(:round) { Round.new(4) }
   let(:pickup_size) { round.pickup.cards.length }
-  let!(:result) { Draw.new(round.current_player_turn, round).call }
+  let!(:result) { DrawCard.new(round.current_player_turn, round).call }
 
   context 'user discards an owned card' do
     it 'Returns true' do

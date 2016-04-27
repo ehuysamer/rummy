@@ -12,7 +12,7 @@ Rails.application.routes.draw do
     resources :players, only: [:show, :index] do  #, param: :player_id
       #[:draw, :discard, :draw_discarded, :meld, :joker_grab, :summon].each { |resource| resources resource, only: :create }
 
-      resources :draw, only: [:create]
+      resources :draw_card, only: [:create]
       resources :discard, only: [:create]
       resources :draw_discarded, only: [:create]
       resources :meld, only: [:create]

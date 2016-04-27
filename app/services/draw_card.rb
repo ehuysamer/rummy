@@ -1,4 +1,4 @@
-class Draw
+class DrawCard
   def initialize(player, round)
     @player = player
     @round = round

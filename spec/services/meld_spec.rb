@@ -12,8 +12,8 @@ RSpec.describe Meld, type: :class do
   let(:meld) { round.find_meld(meld_cards) }
   let(:joker1) { }
   let(:joker2) { }
-  let(:joker1_card) { round.find_card(id: 'joker') }
-  let(:joker2_card) { round.find_card(id: 'joker2') }
+  let(:joker1_card) { round.find_card(id: Card::JOKER[0]) }
+  let(:joker2_card) { round.find_card(id: Card::JOKER[1]) }
   let(:round) { Round.new(4) }
   let(:result) { Meld.new(round:round, player:player, cards: meld_cards).call }
 
@@ -21,11 +21,11 @@ RSpec.describe Meld, type: :class do
     cards.each { |val| round.current_player_turn.hand << round.steal_card(id: val) }
 
     if joker1
-      JokerImpersonate.new(round: round, player: player, joker_id: 'joker', value: joker1).call
+      JokerImpersonate.new(round: round, player: player, joker_id: Card::JOKER[0], value: joker1).call
     end
 
     if joker2
-      JokerImpersonate.new(round: round, player: player, joker_id: 'joker2', value: joker2).call
+      JokerImpersonate.new(round: round, player: player, joker_id: Card::JOKER[1], value: joker2).call
     end
 
     Meld.new(round: round, player: player, cards: %w(C2 C3 C4).map{|card| round.find_card(id: card)}).call
@@ -141,7 +141,7 @@ RSpec.describe Meld, type: :class do
   #TODO: #TEST: Can't attach joker as card that's already placed
 
   context 'attaches joker on its own' do
-    let(:cards_to_meld) { %w(joker) }
+    let(:cards_to_meld) { [Card::JOKER[0]] }
     let(:joker1) { 'C5' }
 
     it 'melds to correct stack' do
@@ -165,6 +165,7 @@ RSpec.describe Meld, type: :class do
     let(:cards_to_meld) { %w(D4 H4 C4) }
 
     before do
+      result
       meld.owner = round.players[3]
     end
 

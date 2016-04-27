@@ -11,26 +11,24 @@ class Meld
   def call
     meld = round.find_meld(cards)
 
-    if cards.detect { |card| card.joker && (card.suite.nil? || card.rank.nil?) }
+    if cards.all? { |card| card.has_value? }
       @errors << 'You must set the rank and suite for the joker(s) that you want to meld'
       return false
     end
 
-    if meld.nil?
+    unless meld
       @errors << 'You are attempting to create a meld that is invalid'
       return false
     end
 
     if meld.cards.length == 0
       meld.owner = player
-      player.melds << meld
     elsif player.melds.length == 0
-      @errors << "You can't attach cards until you've created a meld"
+      errors << "You can't attach cards until you've created a meld"
       return false
     end
 
-    player.hand.remove_cards(cards)
-    meld.concat(cards)
+    cards.each{|card| player.hand.move_to(id: card.id, stack: meld)}
 
     cards.each do |card|
       card.owner = player

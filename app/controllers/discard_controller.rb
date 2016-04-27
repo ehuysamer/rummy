@@ -2,21 +2,15 @@ class DiscardController < ApplicationController
   include PlayerConcern
 
   def create
-    can_play_service = CanPlay.new(round: @round, player: @player)
+    return unless handle_can_play
 
-    if can_play_service.call
-      discard_service = Discard.new(round: @round, player: @player, card_id: params[:discard])
-    else
-      flash[:notice] = can_play_service.errors.join('<br/>')
-      redirect_to_current_round
-      return
-    end
+    discard_service = Discard.new(round: @round, player: @player, card_id: params[:discard])
 
     if discard_service.call
       @round.next_player
-    else
-      flash[:notice] = discard_service.errors.join('<br/>')
     end
+
+    show_errors(discard_service.errors)
 
     redirect_to_current_round
   end

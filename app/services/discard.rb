@@ -9,24 +9,28 @@ class Discard
   end
 
   def call
-    if @player.card_must_use_id
-      @errors << "You have not used the card that you picked up from the discard pile. Use UNDO if you are stuck."
+    if player.card_must_use_id
+      errors << "You have not used the card that you picked up from the discard pile. Use UNDO if you are stuck."
       return false
     end
 
-    @player.hand.cards.each {|card| card.chosen = false}
+    player.hand.cards.each {|card| card.chosen = false}
 
-    card_discarded = @player.hand.remove_card(id: @card_id)
-    if card_discarded.nil?
-      @errors << "You cannot discard a card that you don't have"
+    card_discarded = player.hand.remove_card(id: card_id)
+    unless card_discarded
+      errors << "You cannot discard a card that you don't have"
       return false
     end
 
-    @player.has_drawn_card = false
-    @round.discard << card_discarded
+    player.has_drawn_card = false
+    round.discard << card_discarded
 
     true
   end
+
+  private
+
+  attr_reader :player, :card_id, :round
 end
 
 #round.discard << round.selected_player.hand.remove_by_value(params[:discard])

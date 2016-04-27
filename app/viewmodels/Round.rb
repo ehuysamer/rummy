@@ -41,6 +41,7 @@ class Round
   def reset_stacks
     all_stacks.each { |stack| stack.clear }
     @pickup.add_all
+    self
   end
 
   def can_draw?

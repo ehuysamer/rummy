@@ -43,8 +43,8 @@ class Card
 
   def impersonate(suite: nil, rank: nil)
     if joker
-      @suite = suite
-      @rank = rank
+      @suite = suite if !suite || SUITES.include?(suite)
+      @rank = rank if !rank || (1..13).include?(rank)
     end
   end
 
@@ -102,9 +102,9 @@ class Card
     name_to_rank(rank_name) if rank_name && rank_name.length > 0
   end
 
+  #TODO: rename suite_by_code
   def self.suite_by_id(id)
     index = 0
-    rank_name = nil
 
     # Joker (which is optional)
     if index < id.length && id[index].downcase == 'j'
@@ -123,6 +123,7 @@ class Card
     Card.new(id: suite_rank_to_id(suite, rank), suite: suite, rank: rank, joker: joker)
   end
 
+  #TODO: rename create_from_code
   def self.create_from_id(id)
     suite = nil
     rank = Card.rank_by_id(id)
@@ -142,6 +143,10 @@ class Card
 
   def compare_rank_suite_to(other)
     rank == other.rank && suite == other.suite
+  end
+
+  def has_value?
+    rank && suite
   end
 
   def to_s
