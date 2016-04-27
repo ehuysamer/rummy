@@ -11,7 +11,7 @@ class Meld
   def call
     meld = round.find_meld(cards)
 
-    if cards.all? { |card| card.has_value? }
+    unless cards.all? { |card| card.has_value? }
       @errors << 'You must set the rank and suite for the joker(s) that you want to meld'
       return false
     end
@@ -23,7 +23,9 @@ class Meld
 
     if meld.cards.length == 0
       meld.owner = player
-    elsif player.melds.length == 0
+    end
+
+    if player.melds.length == 0
       errors << "You can't attach cards until you've created a meld"
       return false
     end

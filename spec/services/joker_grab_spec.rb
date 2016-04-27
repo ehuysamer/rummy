@@ -24,13 +24,10 @@ RSpec.describe JokerGrab, type: :class do
 
     round.current_player_turn = player1
 
-    #byebug
+    JokerImpersonate.new(round: round, player: player1, joker_id: Card::JOKER[0], value: 'HA').call
+    JokerImpersonate.new(round: round, player: player1, joker_id: Card::JOKER[1], value: 'DA').call
 
-    JokerImpersonate.new(round: round, player: player1, joker_id: 'joker', value: 'HA').call
-    JokerImpersonate.new(round: round, player: player1, joker_id: 'joker2', value: 'DA').call
     Meld.new(round: round, player: player1, cards: player1.hand.select(card_ids_to_meld)).call
-
-    #byebug
   end
 
   context 'sets up the test case' do
@@ -39,8 +36,8 @@ RSpec.describe JokerGrab, type: :class do
     end
 
     describe 'impersonates the jokers correctly' do
-      let(:joker1) { round.find_card(id: 'joker') }
-      let(:joker2) { round.find_card(id: 'joker2') }
+      let(:joker1) { round.find_card(id: Card::JOKER[0]) }
+      let(:joker2) { round.find_card(id: Card::JOKER[1]) }
 
       it 'found the first joker' do
         expect(joker1).not_to be_nil
@@ -75,8 +72,8 @@ RSpec.describe JokerGrab, type: :class do
   context 'grabs the joker' do
     before do
       round.current_player_turn = player2
-      JokerGrab.new(round: round, player: player2, card_submitted: card_to_grab, joker_id: 'joker').call
-      JokerGrab.new(round: round, player: player2, card_submitted: card_to_grab, joker_id: 'joker2').call
+      JokerGrab.new(round: round, player: player2, card_submitted: card_to_grab, joker_id: Card::JOKER[0]).call
+      JokerGrab.new(round: round, player: player2, card_submitted: card_to_grab, joker_id: Card::JOKER[1]).call
     end
 
     context 'Other player has melded with jokers owned by current player' do

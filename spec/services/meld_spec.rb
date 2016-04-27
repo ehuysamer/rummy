@@ -162,7 +162,7 @@ RSpec.describe Meld, type: :class do
   end
 
   context 'user melds rank already owned by other player' do
-    let(:cards_to_meld) { %w(D4 H4 C4) }
+    let(:cards_to_meld) { %w(D4 H4 S4) }
 
     before do
       result
